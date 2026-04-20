@@ -5,6 +5,32 @@ import prisma from '@/lib/db';
  * Módulo dinámico para enviar correos usando la base de datos para no obligar el uso de .env
  */
 export async function getMailerTransport() {
+  // Prioridad: Variables de entorno (Más estable para producción)
+  const envConfig = {
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: process.env.SMTP_SECURE,
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+    from: process.env.SMTP_FROM
+  };
+
+  if (envConfig.host && envConfig.user && envConfig.pass) {
+    return {
+      transporter: nodemailer.createTransport({
+        host: envConfig.host,
+        port: parseInt(envConfig.port || '587'),
+        secure: envConfig.secure === 'true' || envConfig.port === '465', 
+        auth: {
+          user: envConfig.user,
+          pass: envConfig.pass,
+        }
+      }),
+      from: envConfig.from || 'noreply@crosspixel.net'
+    };
+  }
+
+  // Fallback: Base de datos (Configuración dinámica desde el dashboard)
   const settings = await prisma.siteSetting.findMany({
     where: {
       key: { in: ['smtp_host', 'smtp_port', 'smtp_secure', 'smtp_user', 'smtp_pass', 'smtp_from'] }
@@ -14,7 +40,7 @@ export async function getMailerTransport() {
   const config = settings.reduce((acc, obj) => ({ ...acc, [obj.key]: obj.value }), {} as Record<string, string>);
 
   if (!config.smtp_host || !config.smtp_user || !config.smtp_pass) {
-    throw new Error('SMTP no configurado en el panel administrativo');
+    throw new Error('SMTP no configurado ni en .env ni en el panel administrativo');
   }
 
   return {
