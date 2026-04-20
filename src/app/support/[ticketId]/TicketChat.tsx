@@ -12,7 +12,7 @@ interface Message {
     username: string;
     avatar: string | null;
     role: { color: string; name: string; isStaff: boolean };
-  };
+  } | null;
 }
 
 export default function TicketChat({
@@ -90,17 +90,17 @@ export default function TicketChat({
             <div style={{
               width: 36, height: 36, borderRadius: '50%', background: 'var(--bg-overlay)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '0.8rem', fontWeight: 700, color: msg.author.role.color,
+              fontSize: '0.8rem', fontWeight: 700, color: msg.author?.role.color || 'var(--text-muted)',
               flexShrink: 0, overflow: 'hidden',
             }}>
-              {msg.author.avatar ? (
+              {msg.author?.avatar ? (
                 <img src={msg.author.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : msg.author.username[0]}
+              ) : msg.author?.username?.[0] || '?'}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: '0.25rem' }}>
-                <span style={{ fontWeight: 600, color: msg.author.role.color, fontSize: '0.9375rem' }}>
-                  {msg.author.username}
+                <span style={{ fontWeight: 600, color: msg.author?.role.color || 'var(--text-muted)', fontSize: '0.9375rem' }}>
+                  {msg.author?.username || 'Usuario Desconocido'}
                 </span>
                 {msg.isStaff && <span className="badge badge-primary" style={{ fontSize: '0.625rem' }}>STAFF</span>}
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>

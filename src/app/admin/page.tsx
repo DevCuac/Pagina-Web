@@ -69,7 +69,7 @@ export default async function AdminDashboard() {
             <div key={ticket.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border-muted)' }}>
               <div>
                 <div style={{ fontWeight: 500, fontSize: '0.9375rem' }}>{ticket.subject}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t('admin.by')} {ticket.author.username}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t('admin.by')} {ticket.author?.username || t('auth.unknown_user')}</div>
               </div>
               <span className={`badge ${ticket.status === 'open' ? 'badge-success' : ticket.status === 'in_progress' ? 'badge-warning' : 'badge-danger'}`}>
                 {ticket.status === 'open' ? t('admin.open') : ticket.status === 'in_progress' ? t('admin.in_progress') : t('admin.closed')}

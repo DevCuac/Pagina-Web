@@ -51,7 +51,7 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ t
                 <span className={`badge ${statusColors[ticket.status]}`}>{statusLabels[ticket.status]}</span>
                 <span className="badge badge-info">{ticket.category.name}</span>
                 <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                  por <span style={{ color: ticket.author.role.color }}>{ticket.author.username}</span>
+                  por <span style={{ color: ticket.author?.role.color || 'var(--text-muted)' }}>{ticket.author?.username || 'Usuario Desconocido'}</span>
                   {' · '}
                   {new Date(ticket.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </span>

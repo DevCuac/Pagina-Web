@@ -81,7 +81,7 @@ export default async function ForumsPage() {
                             <>
                               <span className={styles.latestTitle}>{latestPost.title}</span>
                               <span className={styles.latestAuthor}>
-                                {t('admin.by')} <span style={{ color: latestPost.author.role.color }}>{latestPost.author.username}</span>
+                                {t('admin.by')} <span style={{ color: latestPost.author?.role.color || 'var(--text-muted)' }}>{latestPost.author?.username || t('auth.unknown_user')}</span>
                               </span>
                             </>
                           ) : (

@@ -98,7 +98,7 @@ export default async function SupportPage() {
                       </Link>
                       {hasPermission(session.user, 'tickets.staff') && (
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                          por <span style={{ color: ticket.author.role.color }}>{ticket.author.username}</span>
+                          {t('admin.by')} <span style={{ color: ticket.author?.role.color || 'var(--text-muted)' }}>{ticket.author?.username || t('auth.unknown_user')}</span>
                         </div>
                       )}
                     </td>
