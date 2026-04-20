@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
+  const { update } = useSession();
   const [profile, setProfile] = useState({ avatar: '', bio: '', minecraftName: '' });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -32,6 +34,7 @@ export default function ProfileSettingsPage() {
         body: JSON.stringify(profile)
       });
       if (res.ok) {
+        await update(); // Refresca las cookies de NextAuth automágicamente
         alert('Perfil actualizado con éxito');
         router.refresh();
       } else {
