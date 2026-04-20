@@ -278,6 +278,9 @@
     "category": "Category",
     "sel_category": "Select...",
     "desc": "Description",
+    "image": "Header Image URL",
+    "icon_placeholder": "Emoji (e.g. ⚔️)",
+    "image_placeholder": "URL for the forum banner image",
     "rules": "Rules",
     "struct": "Forums Structure"
   },

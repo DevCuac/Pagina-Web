@@ -278,6 +278,9 @@
     "category": "Kategorie",
     "sel_category": "Auswählen...",
     "desc": "Beschreibung",
+    "image": "Header-Bild-URL",
+    "icon_placeholder": "Emoji (z.B. ⚔️)",
+    "image_placeholder": "URL für das Foren-Banner-Bild",
     "rules": "Regeln",
     "struct": "Forenstruktur"
   },

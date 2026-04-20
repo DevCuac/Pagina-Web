@@ -7,7 +7,7 @@ export default function AdminForumsPage() {
   const { t } = useTranslation();
   const [categories, setCategories] = useState<any[]>([]);
   const [catForm, setCatForm] = useState({ name: '', slug: '', description: '', icon: '' });
-  const [forumForm, setForumForm] = useState({ name: '', slug: '', description: '', icon: '', rules: '', categoryId: '' });
+  const [forumForm, setForumForm] = useState({ name: '', slug: '', description: '', icon: '', image: '', rules: '', categoryId: '' });
   const [editingCat, setEditingCat] = useState<string | null>(null);
   const [editingForum, setEditingForum] = useState<string | null>(null);
 
@@ -25,7 +25,7 @@ export default function AdminForumsPage() {
     e.preventDefault();
     const method = editingForum ? 'PATCH' : 'POST';
     await fetch('/api/admin/forums', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(editingForum ? { ...forumForm, id: editingForum } : forumForm) });
-    setForumForm({ name: '', slug: '', description: '', icon: '', rules: '', categoryId: '' }); setEditingForum(null); refresh();
+    setForumForm({ name: '', slug: '', description: '', icon: '', image: '', rules: '', categoryId: '' }); setEditingForum(null); refresh();
   };
 
   const deleteCat = async (id: string) => { if (!confirm('¿Eliminar categoría y sus foros?')) return; await fetch('/api/admin/forums/categories', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) }); refresh(); };
@@ -61,11 +61,20 @@ export default function AdminForumsPage() {
             <div className="form-group"><label className="form-label">{t('admin_forums_page.name')}</label><input className="form-input" value={forumForm.name} onChange={e => setForumForm({ ...forumForm, name: e.target.value, slug: editingForum ? forumForm.slug : e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') })} required /></div>
             <div className="form-group"><label className="form-label">{t('admin_forums_page.slug')}</label><input className="form-input" value={forumForm.slug} onChange={e => setForumForm({ ...forumForm, slug: e.target.value })} required /></div>
             <div className="form-group"><label className="form-label">{t('admin_forums_page.desc')}</label><input className="form-input" value={forumForm.description} onChange={e => setForumForm({ ...forumForm, description: e.target.value })} /></div>
-            <div className="form-group"><label className="form-label">{t('admin_forums_page.icon')}</label><input className="form-input" value={forumForm.icon} onChange={e => setForumForm({ ...forumForm, icon: e.target.value })} placeholder="Emoji o URL de imagen" /></div>
+            <div className="grid grid-2" style={{ gap: 'var(--space-md)' }}>
+              <div className="form-group">
+                <label className="form-label">{t('admin_forums_page.icon')}</label>
+                <input className="form-input" value={forumForm.icon} onChange={e => setForumForm({ ...forumForm, icon: e.target.value })} placeholder={t('admin_forums_page.icon_placeholder')} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">{t('admin_forums_page.image')}</label>
+                <input className="form-input" value={forumForm.image} onChange={e => setForumForm({ ...forumForm, image: e.target.value })} placeholder={t('admin_forums_page.image_placeholder')} />
+              </div>
+            </div>
             <div className="form-group"><label className="form-label">{t('admin_forums_page.rules')}</label><textarea className="form-textarea" value={forumForm.rules} onChange={e => setForumForm({ ...forumForm, rules: e.target.value })} rows={3} /></div>
             <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
               <button type="submit" className="btn btn-primary">{editingForum ? t('admin_games.btn_update') : t('admin_forums_page.btn_create')}</button>
-              {editingForum && <button type="button" className="btn btn-secondary" onClick={() => { setEditingForum(null); setForumForm({ name: '', slug: '', description: '', icon: '', rules: '', categoryId: '' }); }}>{t('admin_games.btn_cancel')}</button>}
+              {editingForum && <button type="button" className="btn btn-secondary" onClick={() => { setEditingForum(null); setForumForm({ name: '', slug: '', description: '', icon: '', image: '', rules: '', categoryId: '' }); }}>{t('admin_games.btn_cancel')}</button>}
             </div>
           </form>
         </div>
@@ -86,7 +95,7 @@ export default function AdminForumsPage() {
               <div key={forum.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0 0.5rem var(--space-lg)', borderBottom: '1px solid var(--border-muted)' }}>
                 <span>{forum.icon} {forum.name}</span>
                 <div style={{ display: 'flex', gap: 'var(--space-xs)' }}>
-                  <button className="btn btn-ghost btn-sm" onClick={() => { setForumForm({ name: forum.name, slug: forum.slug, description: forum.description || '', icon: forum.icon || '', rules: forum.rules || '', categoryId: cat.id }); setEditingForum(forum.id); }}>✏️</button>
+                  <button className="btn btn-ghost btn-sm" onClick={() => { setForumForm({ name: forum.name, slug: forum.slug, description: forum.description || '', icon: forum.icon || '', image: forum.image || '', rules: forum.rules || '', categoryId: cat.id }); setEditingForum(forum.id); }}>✏️</button>
                   <button className="btn btn-ghost btn-sm" onClick={() => deleteForum(forum.id)}>🗑️</button>
                 </div>
               </div>

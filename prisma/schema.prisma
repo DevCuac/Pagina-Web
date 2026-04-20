@@ -115,6 +115,7 @@ model Forum {
   description String?
   slug        String  @unique
   icon        String?
+  image       String?
   order       Int     @default(0)
   rules       String?
   categoryId  String
