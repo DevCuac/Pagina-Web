@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌐 CrossPixel Network
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)
+![Prisma](https://img.shields.io/badge/Prisma-5.22-2D3748?style=for-the-badge&logo=prisma)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
+![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql)
+![Auth.js](https://img.shields.io/badge/Auth.js-Security-purple?style=for-the-badge&logo=nextauth)
 
-First, run the development server:
+Bienvenido al repositorio oficial de **CrossPixel Web**, una plataforma de comunidad integral diseñada para redefinir el ecosistema y la gestión de redes de gaming. Construida de cero para ofrecer una experiencia ultra-rápida, segura y escalable.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Características Principales
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+*   **🛡️ Autenticación Moderna (Auth.js):** 
+    Soporte para inicio de sesión local (usuario/email), verificación por SMTP y OAuth integrado (Discord y Google) para un acceso instantáneo sin perder la seguridad.
+*   **🌍 Multi-Idioma (i18n):** 
+    Traducción dinámica implementada en todo el sistema (`en-US` y `de-DE`) incluyendo el panel de control. Todo adaptado para crecimiento internacional.
+*   **💬 Foros de Comunidad (Forums):** 
+    Hilos de discusión, respuestas enriquecidas, protección temporal y jerarquías limpias diseñadas para el feedback efectivo de los jugadores.
+*   **🎫 Sistema de Soporte Avanzado (Tickets):** 
+    Permite a los usuarios crear tickets categorizados y recibir atención priorizada en tiempo real.
+*   **👑 Roles y Permisos Granulares:**
+    Motor de permisos (`admin.access`, `forums.moderate`, etc.) asignables por roles personalizables para miembros de una jerarquía extensa (Staff, Admin, VIP).
+*   **⚙️ Panel de Administración Dinámico:**
+    Un centro de control absoluto (`/admin/*`) donde el administrador puede gestionar usuarios, crear categorías de foros, definir reglas de modos de juego y visualizar notificaciones globales.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tecnologías Empleadas
 
-## Learn More
+El proyecto está creado utilizando un "Stack" moderno y robusto, garantizando el mejor rendimiento:
+- **Framework:** `Next.js 14` (App Router)
+- **Lenguaje:** `TypeScript`
+- **Base de Datos:** `MySQL` | `PostgreSQL` | `SQLite`
+- **ORM:** `Prisma`
+- **Seguridad y Cifrado:** `bcryptjs`, `NextAuth (Auth.js v5)`
+- **Core de UI:** Diseño robusto implementando CSS Modules y alertas nativas.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚀 Despliegue en Producción (Vercel)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+El proyecto está empaquetado para escalar globalmente y sobrevivir flujos altísimos de jugadores gracias a **Vercel** o plataformas PaaS.
 
-## Deploy on Vercel
+1. **Variables de Entorno (`.env`):**
+   Asegúrate de rellenar todas las variables necesarias extraídas de `.env.example`, en especial tu `DATABASE_URL` y tu `AUTH_SECRET`.
+   
+   *Si estás detrás de un proxy/Pterodactyl, activa `AUTH_TRUST_HOST=true`.*
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Base de Datos Remota:**
+   El código espera una base de datos persistente (*MySQL* o *PostgreSQL* preferiblemente si estás en servicios Serverless) para persistir las migraciones.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Deploy Automatizado:**
+   Una vez configurado Vercel, sólo ejecuta el siguiente script en tu terminal para compilar el proyecto o ver su despliegue directamente desde el repositorio:
+   ```bash
+   npm run build && npm run start
+   ```
+
+## 💻 Desarrollo Local
+
+Si deseas clonar el repositorio para desarrollar y contribuir locamente, es tan sencillo como:
+
+1. **Clonar e instalar dependencias:**
+   ```bash
+   git clone https://github.com/tu-usuario/cross-pixel-web.git
+   cd cross-pixel-web
+   npm install
+   ```
+
+2. **Sincronizar y generar la Base de Datos:**
+   ```bash
+   npm run db:setup
+   ```
+   *(Este comando inyectará los roles básicos y sincronizará Prisma de golpe).*
+
+3. **Inicia el servidor en modo desarrollo:**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+❤️ **Desarrollado con mucha pasión para dar vida a la comunidad.**
