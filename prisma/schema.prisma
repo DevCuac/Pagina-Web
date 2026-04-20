@@ -1,0 +1,310 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// AUTH & USERS
+// ==========================================
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  avatar        String?
+  banner        String?
+  bio           String?
+  minecraftUuid String?   @unique
+  minecraftName String?
+  discordId     String?   @unique
+  googleId      String?   @unique
+  roleId        String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  role           Role            @relation(fields: [roleId], references: [id])
+  accounts       Account[]
+  sessions       Session[]
+  forumPosts     ForumPost[]
+  forumComments  ForumComment[]
+  ticketsCreated Ticket[]        @relation("ticketAuthor")
+  ticketsAssigned Ticket[]       @relation("ticketAssigned")
+  ticketMessages TicketMessage[]
+  notifications  Notification[]
+  wikiRevisions  WikiRevision[]
+}
+
+model Role {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  color       String  @default("#8b949e")
+  icon        String?
+  weight      Int     @default(0)
+  isDefault   Boolean @default(false)
+  isAdmin     Boolean @default(false)
+  isStaff     Boolean @default(false)
+  permissions String  @default("{}")
+  createdAt   DateTime @default(now())
+
+  users            User[]
+  forumPermissions ForumPermission[]
+}
+
+// NextAuth models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ==========================================
+// FORUMS
+// ==========================================
+
+model ForumCategory {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  slug        String  @unique
+  icon        String?
+  order       Int     @default(0)
+  createdAt   DateTime @default(now())
+
+  forums Forum[]
+}
+
+model Forum {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  slug        String  @unique
+  icon        String?
+  order       Int     @default(0)
+  rules       String?
+  categoryId  String
+  createdAt   DateTime @default(now())
+
+  category    ForumCategory     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  posts       ForumPost[]
+  permissions ForumPermission[]
+}
+
+model ForumPermission {
+  id        String  @id @default(cuid())
+  forumId   String
+  roleId    String
+  canView   Boolean @default(true)
+  canPost   Boolean @default(true)
+  canReply  Boolean @default(true)
+  canPin    Boolean @default(false)
+  canLock   Boolean @default(false)
+  canDelete Boolean @default(false)
+
+  forum Forum @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  role  Role  @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([forumId, roleId])
+}
+
+model ForumPost {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  isPinned  Boolean  @default(false)
+  isLocked  Boolean  @default(false)
+  views     Int      @default(0)
+  forumId   String
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  forum    Forum          @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  author   User           @relation(fields: [authorId], references: [id])
+  comments ForumComment[]
+}
+
+model ForumComment {
+  id        String   @id @default(cuid())
+  content   String
+  postId    String
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post   ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User      @relation(fields: [authorId], references: [id])
+}
+
+// ==========================================
+// SUPPORT TICKETS
+// ==========================================
+
+model TicketCategory {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  tickets Ticket[]
+}
+
+model Ticket {
+  id           String   @id @default(cuid())
+  subject      String
+  status       String   @default("open")
+  priority     String   @default("normal")
+  categoryId   String
+  authorId     String
+  assignedToId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  category   TicketCategory @relation(fields: [categoryId], references: [id])
+  author     User           @relation("ticketAuthor", fields: [authorId], references: [id])
+  assignedTo User?          @relation("ticketAssigned", fields: [assignedToId], references: [id])
+  messages   TicketMessage[]
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  content   String
+  isStaff   Boolean  @default(false)
+  ticketId  String
+  authorId  String
+  createdAt DateTime @default(now())
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author User   @relation(fields: [authorId], references: [id])
+}
+
+// ==========================================
+// NOTIFICATIONS
+// ==========================================
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// WIKI & GAME MODES
+// ==========================================
+
+model GameMode {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  icon        String?
+  image       String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  wikiPages WikiPage[]
+  servers   Server[]
+}
+
+model WikiPage {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String
+  summary     String?
+  image       String?
+  gameModeId  String?
+  parentId    String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  gameMode  GameMode?      @relation(fields: [gameModeId], references: [id])
+  parent    WikiPage?      @relation("WikiHierarchy", fields: [parentId], references: [id])
+  children  WikiPage[]     @relation("WikiHierarchy")
+  revisions WikiRevision[]
+}
+
+model WikiRevision {
+  id        String   @id @default(cuid())
+  content   String
+  summary   String?
+  pageId    String
+  editorId  String
+  createdAt DateTime @default(now())
+
+  page   WikiPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  editor User     @relation(fields: [editorId], references: [id])
+}
+
+// ==========================================
+// SERVER STATUS
+// ==========================================
+
+model Server {
+  id         String   @id @default(cuid())
+  name       String
+  host       String
+  port       Int      @default(25565)
+  gameModeId String?
+  isMain     Boolean  @default(false)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  gameMode GameMode? @relation(fields: [gameModeId], references: [id])
+}
+
+// ==========================================
+// SITE SETTINGS
+// ==========================================
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}

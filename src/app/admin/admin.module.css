@@ -1,0 +1,111 @@
+.adminLayout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+  min-height: calc(100vh - var(--navbar-height) - 200px);
+}
+
+.sidebar {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: sticky;
+  top: calc(var(--navbar-height) + var(--space-lg));
+}
+
+.sidebarHeader {
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.sidebarHeader h3 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sidebarNav {
+  padding: var(--space-sm);
+}
+
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.sidebarLink:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.sidebarFooter {
+  padding: var(--space-sm);
+  border-top: 1px solid var(--border-muted);
+}
+
+.content {
+  min-width: 0;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.statCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.statCard h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.statCard .value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* Admin Tables */
+.adminTable {
+  width: 100%;
+}
+
+.adminActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+@media (max-width: 768px) {
+  .adminLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
