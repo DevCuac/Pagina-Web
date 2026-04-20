@@ -178,8 +178,14 @@
     "locked": "This thread is locked.",
     "reply_placeholder": "Type your reply...",
     "no_forums": "No forums available",
-    "no_forums_desc": "Forums will be created by administrators",
-    "posts_count": "posts"
+    "no_forums_desc": "Forums are created by administrators",
+    "posts_count": "posts",
+    "rules": "Forum Rules",
+    "posts": "posts",
+    "new_post": "New Post",
+    "pinned": "Pinned",
+    "empty": "No posts",
+    "empty_desc": "Be the first to post in this forum!"
   },
   "games": {
     "title": "Game Modes",

@@ -4,10 +4,11 @@ import { getServerStatus } from '@/lib/minecraft';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 import styles from './status.module.css';
 
-export const metadata: Metadata = {
-  title: 'Estado del Servidor',
-  description: 'Estado en tiempo real de los servidores de CrossPixel',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getLocaleObj();
+  const t = (key: string) => getTranslation(dict, key);
+  return { title: t('status.title') };
+}
 
 export const revalidate = 30;
 

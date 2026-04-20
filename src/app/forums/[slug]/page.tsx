@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import prisma from '@/lib/db';
 import { auth } from '@/lib/auth';
+import { getLocaleObj, getTranslation } from '@/lib/i18n';
 import styles from '../forums.module.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -31,12 +32,14 @@ export default async function ForumDetailPage({ params }: { params: Promise<{ sl
   });
 
   const session = await auth();
+  const { dict, locale } = await getLocaleObj();
+  const t = (key: string) => getTranslation(dict, key);
 
   return (
     <div className="page-content">
       <div className="container">
         <div className="breadcrumbs">
-          <Link href="/forums">Foros</Link>
+          <Link href="/forums">{t('forums.title')}</Link>
           <span>›</span>
           <Link href="/forums">{forum.category.name}</Link>
           <span>›</span>
@@ -50,18 +53,18 @@ export default async function ForumDetailPage({ params }: { params: Promise<{ sl
 
         {forum.rules && (
           <div className={styles.rules}>
-            <h3>📋 Reglas del Foro</h3>
+            <h3>📋 {t('forums.rules')}</h3>
             <p>{forum.rules}</p>
           </div>
         )}
 
         <div className={styles.forumActions}>
           <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            {posts.length} publicaciones
+            {posts.length} {t('forums.posts')}
           </span>
           {session && (
             <Link href={`/forums/${slug}/new`} className="btn btn-primary">
-              + Nueva Publicación
+              + {t('forums.new_post')}
             </Link>
           )}
         </div>
@@ -79,23 +82,23 @@ export default async function ForumDetailPage({ params }: { params: Promise<{ sl
                 </div>
                 <div className={styles.postInfo}>
                   <h3>
-                    {post.isPinned && <span className="badge badge-primary">📌 Fijado</span>}
+                    {post.isPinned && <span className="badge badge-primary">📌 {t('forums.pinned')}</span>}
                     {post.isLocked && <span className="badge badge-warning">🔒</span>}
                     {post.title}
                   </h3>
                   <p>
-                    por <span style={{ color: post.author.role.color }}>{post.author.username}</span>
+                    {t('admin.by')} <span style={{ color: post.author.role.color }}>{post.author.username}</span>
                     {' · '}
-                    {new Date(post.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    {new Date(post.createdAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'de-DE', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </p>
                 </div>
                 <div className={styles.postStat}>
                   <span className={styles.postStatVal}>{post._count.comments}</span>
-                  respuestas
+                  {t('forums.replies')}
                 </div>
                 <div className={styles.postStat}>
                   <span className={styles.postStatVal}>{post.views}</span>
-                  vistas
+                  {t('forums.views')}
                 </div>
               </Link>
             ))}
@@ -104,8 +107,8 @@ export default async function ForumDetailPage({ params }: { params: Promise<{ sl
           <div className="card">
             <div className="empty-state">
               <div className="empty-state-icon">📝</div>
-              <h3 className="empty-state-title">Sin publicaciones</h3>
-              <p className="empty-state-text">¡Sé el primero en publicar en este foro!</p>
+              <h3 className="empty-state-title">{t('forums.empty')}</h3>
+              <p className="empty-state-text">{t('forums.empty_desc')}</p>
             </div>
           </div>
         )}

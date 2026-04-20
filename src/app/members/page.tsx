@@ -4,10 +4,11 @@ import prisma from '@/lib/db';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 import styles from './members.module.css';
 
-export const metadata: Metadata = {
-  title: 'Miembros',
-  description: 'Miembros de la comunidad CrossPixel',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getLocaleObj();
+  const t = (key: string) => getTranslation(dict, key);
+  return { title: t('members.title') };
+}
 
 export default async function MembersPage({ searchParams }: { searchParams: Promise<{ list?: string; search?: string; role?: string }> }) {
   const sp = await searchParams;

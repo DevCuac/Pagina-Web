@@ -4,10 +4,13 @@ import prisma from '@/lib/db';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 import styles from './games.module.css';
 
-export const metadata: Metadata = {
-  title: 'Modos de Juego',
-  description: 'Explora los modos de juego disponibles en CrossPixel Network',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getLocaleObj();
+  const t = (key: string) => getTranslation(dict, key);
+  return {
+    title: t('games.title')
+  };
+}
 
 export default async function GamesPage() {
   const gameModes = await prisma.gameMode.findMany({

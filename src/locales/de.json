@@ -179,7 +179,13 @@
     "reply_placeholder": "Geben Sie Ihre Antwort ein...",
     "no_forums": "Keine Foren verfügbar",
     "no_forums_desc": "Foren werden von Administratoren erstellt",
-    "posts_count": "beiträge"
+    "posts_count": "Beiträge",
+    "rules": "Forenregeln",
+    "posts": "Beiträge",
+    "new_post": "Neuer Beitrag",
+    "pinned": "Angeheftet",
+    "empty": "Keine Beiträge",
+    "empty_desc": "Sei der Erste, der in diesem Forum etwas postet!"
   },
   "games": {
     "title": "Spielmodi",

@@ -5,10 +5,11 @@ import { auth } from '@/lib/auth';
 import { hasPermission } from '@/lib/permissions';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 
-export const metadata: Metadata = {
-  title: 'Soporte',
-  description: 'Centro de soporte de CrossPixel. Crea y gestiona tus tickets.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getLocaleObj();
+  const t = (key: string) => getTranslation(dict, key);
+  return { title: t('support.title') };
+}
 
 export default async function SupportPage() {
   const session = await auth();

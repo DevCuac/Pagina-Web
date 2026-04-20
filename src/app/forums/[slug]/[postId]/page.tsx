@@ -79,7 +79,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
                 <span className="badge badge-role" style={{ background: post.author.role.color + '22', color: post.author.role.color }}>
                   {post.author.role.name}
                 </span>
-                <span className={styles.postCount}>{post.author._count.forumPosts} posts</span>
+                <span className={styles.postCount}>{post.author._count.forumPosts} {t('forums.posts')}</span>
               </div>
               <div className={styles.postContentArea}>
                 {post.content}

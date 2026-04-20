@@ -4,10 +4,13 @@ import prisma from '@/lib/db';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 import styles from './forums.module.css';
 
-export const metadata: Metadata = {
-  title: 'Foros',
-  description: 'Foros de la comunidad CrossPixel. Discute, comparte y conecta con otros jugadores.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getLocaleObj();
+  const t = (key: string) => getTranslation(dict, key);
+  return {
+    title: t('forums.title')
+  };
+}
 
 export default async function ForumsPage() {
   const categories = await prisma.forumCategory.findMany({

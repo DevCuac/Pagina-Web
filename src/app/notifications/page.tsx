@@ -6,7 +6,11 @@ import { auth } from '@/lib/auth';
 import NotificationActions from './NotificationActions';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 
-export const metadata: Metadata = { title: 'Notificaciones' };
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getLocaleObj();
+  const t = (key: string) => getTranslation(dict, key);
+  return { title: t('notifications.title') };
+}
 
 export default async function NotificationsPage() {
   const session = await auth();
