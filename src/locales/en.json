@@ -37,7 +37,8 @@
     "go_login": "Go to Login",
     "err_unverified": "Your account is not verified. Please check your email.",
     "err_credentials": "Incorrect username or password",
-    "err_generic": "An error occurred"
+    "err_generic": "An error occurred",
+    "unknown_user": "Unknown User"
   },
   "dashboard": {
     "greeting": "Hello, welcome back!",
@@ -104,7 +105,8 @@
     "no_posts": "No posts yet",
     "first_post": "Be the first to create a forum post",
     "read_more": "Continue reading...",
-    "explore_forum": "Explore Forum"
+    "explore_forum": "Explore Forum",
+    "no_description": "Join the conversation in our official forum."
   },
   "admin": {
     "title": "Administration",
@@ -144,7 +146,8 @@
     "wiki_published": "Published Articles",
     "wiki_edit_btn": "✏️ Edit",
     "wiki_empty": "No Articles",
-    "wiki_empty_desc": "Start by creating your first documentation or server rules."
+    "wiki_empty_desc": "Start by creating your first documentation or server rules.",
+    "manage": "Official"
   },
   "support": {
     "title": "Support Center",

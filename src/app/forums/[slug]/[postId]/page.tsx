@@ -68,18 +68,22 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
             </div>
             <div className={styles.postBody}>
               <div className={styles.postAuthorSide}>
-                <div className="avatar-placeholder avatar-lg" style={{ width: 64, height: 64, fontSize: '1.5rem', borderColor: post.author.role.color }}>
-                  {post.author.avatar ? (
+                <div className="avatar-placeholder avatar-lg" style={{ width: 64, height: 64, fontSize: '1.5rem', borderColor: post.author?.role.color || 'var(--border-muted)' }}>
+                  {post.author?.avatar ? (
                     <img src={post.author.avatar} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
                   ) : (
-                    post.author.username[0]
+                    post.author ? post.author.username[0] : '?'
                   )}
                 </div>
-                <span className={styles.name} style={{ color: post.author.role.color }}>{post.author.username}</span>
-                <span className="badge badge-role" style={{ background: post.author.role.color + '22', color: post.author.role.color }}>
-                  {post.author.role.name}
-                </span>
-                <span className={styles.postCount}>{post.author._count.forumPosts} {t('forums.posts')}</span>
+                <span className={styles.name} style={{ color: post.author?.role.color || 'var(--text-muted)' }}>{post.author?.username || t('auth.unknown_user')}</span>
+                {post.author && (
+                  <>
+                    <span className="badge badge-role" style={{ background: post.author.role.color + '22', color: post.author.role.color }}>
+                      {post.author.role.name}
+                    </span>
+                    <span className={styles.postCount}>{post.author._count.forumPosts} {t('forums.posts')}</span>
+                  </>
+                )}
               </div>
               <div className={styles.postContentArea}>
                 {post.content}
@@ -97,14 +101,14 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
                 <div key={comment.id} className={styles.comment}>
                   <div className={styles.commentAuthor}>
                     <div className="avatar-placeholder" style={{ width: 40, height: 40, fontSize: '0.875rem' }}>
-                      {comment.author.avatar ? (
+                      {comment.author?.avatar ? (
                         <img src={comment.author.avatar} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
                       ) : (
-                        comment.author.username[0]
+                        comment.author ? comment.author.username[0] : '?'
                       )}
                     </div>
-                    <span style={{ color: comment.author.role.color, fontWeight: 600 }}>
-                      {comment.author.username}
+                    <span style={{ color: comment.author?.role.color || 'var(--text-muted)', fontWeight: 600 }}>
+                      {comment.author?.username || t('auth.unknown_user')}
                     </span>
                   </div>
                   <div className={styles.commentBody}>

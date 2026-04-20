@@ -80,10 +80,10 @@ export default async function ForumDetailPage({ params }: { params: Promise<{ sl
             {posts.map((post) => (
               <Link key={post.id} href={`/forums/${slug}/${post.id}`} className={`${styles.postRow} ${post.isPinned ? styles.pinned : ''}`}>
                 <div className={styles.postAuthorAvatar}>
-                  {post.author.avatar ? (
+                  {post.author?.avatar ? (
                     <img src={post.author.avatar} alt="" />
                   ) : (
-                    post.author.username[0]
+                    post.author ? post.author.username[0] : '?'
                   )}
                 </div>
                 <div className={styles.postInfo}>
@@ -93,7 +93,7 @@ export default async function ForumDetailPage({ params }: { params: Promise<{ sl
                     {post.title}
                   </h3>
                   <p>
-                    {t('admin.by')} <span style={{ color: post.author.role.color }}>{post.author.username}</span>
+                    {t('admin.by')} <span style={{ color: post.author?.role.color || 'var(--text-muted)' }}>{post.author?.username || t('auth.unknown_user')}</span>
                     {' · '}
                     {new Date(post.createdAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'de-DE', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </p>

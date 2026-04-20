@@ -229,18 +229,20 @@ export default async function HomePage() {
                 {latestPosts.map((post) => (
                   <Link key={`side-${post.id}`} href={`/forums/${post.forum.slug}/${post.id}`} className={styles.hypixelPostItem}>
                     <div className={styles.hypixelAvatar}>
-                      {post.author.avatar ? (
+                      {post.author?.avatar ? (
                         <img src={post.author.avatar} alt={post.author.username} />
                       ) : (
                         <div className="avatar-placeholder" style={{ width: 24, height: 24, fontSize: '0.65rem' }}>
-                          {post.author.username[0]}
+                          {post.author ? post.author.username[0] : '?'}
                         </div>
                       )}
                     </div>
                     <div className={styles.hypixelPostContent}>
                       <h4 className={styles.hypixelPostTitle}>{post.title}</h4>
                       <div className={styles.hypixelPostMeta}>
-                        <span style={{ color: post.author.role.color }}>{post.author.username}</span>
+                        <span style={{ color: post.author?.role.color || 'var(--text-muted)' }}>
+                          {post.author?.username || t('auth.unknown_user')}
+                        </span>
                         {' · '}
                         {new Date(post.createdAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                       </div>

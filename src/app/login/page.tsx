@@ -30,7 +30,7 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      setError('Credenciales inválidas. Verifica tu correo y contraseña.');
+      setError(result.error);
       setLoading(false);
     } else {
       router.push(callbackUrl);

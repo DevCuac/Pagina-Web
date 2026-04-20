@@ -37,7 +37,8 @@
     "go_login": "Zur Anmeldung",
     "err_unverified": "Ihr Konto ist nicht verifiziert. Bitte überprüfen Sie Ihre E-Mails.",
     "err_credentials": "Falscher Benutzername oder Passwort",
-    "err_generic": "Ein Fehler ist aufgetreten"
+    "err_generic": "Ein Fehler ist aufgetreten",
+    "unknown_user": "Unbekannter Benutzer"
   },
   "dashboard": {
     "greeting": "Hallo, willkommen zurück!",
@@ -104,7 +105,8 @@
     "no_posts": "Noch keine Beiträge",
     "first_post": "Seien Sie der Erste, der einen Forenbeitrag erstellt",
     "read_more": "Weiterlesen...",
-    "explore_forum": "Forum erkunden"
+    "explore_forum": "Forum erkunden",
+    "no_description": "Nehmen Sie an der Unterhaltung in unserem offiziellen Forum teil."
   },
   "admin": {
     "title": "Administration",
@@ -144,7 +146,8 @@
     "wiki_published": "Veröffentlichte Artikel",
     "wiki_edit_btn": "✏️ Bearbeiten",
     "wiki_empty": "Keine Artikel",
-    "wiki_empty_desc": "Beginnen Sie mit der Erstellung Ihrer ersten Dokumentation oder Serverregeln."
+    "wiki_empty_desc": "Beginnen Sie mit der Erstellung Ihrer ersten Dokumentation oder Serverregeln.",
+    "manage": "Offiziell"
   },
   "support": {
     "title": "Support-Center",

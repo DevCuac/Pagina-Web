@@ -152,12 +152,12 @@ model ForumPost {
   isLocked  Boolean  @default(false)
   views     Int      @default(0)
   forumId   String
-  authorId  String
+  authorId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   forum    Forum          @relation(fields: [forumId], references: [id], onDelete: Cascade)
-  author   User           @relation(fields: [authorId], references: [id])
+  author   User?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
   comments ForumComment[]
 }
 
@@ -165,12 +165,12 @@ model ForumComment {
   id        String   @id @default(cuid())
   content   String
   postId    String
-  authorId  String
+  authorId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   post   ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  author User      @relation(fields: [authorId], references: [id])
+  author User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
 }
 
 // ==========================================
@@ -194,14 +194,14 @@ model Ticket {
   status       String   @default("open")
   priority     String   @default("normal")
   categoryId   String
-  authorId     String
+  authorId     String?
   assignedToId String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   category   TicketCategory @relation(fields: [categoryId], references: [id])
-  author     User           @relation("ticketAuthor", fields: [authorId], references: [id])
-  assignedTo User?          @relation("ticketAssigned", fields: [assignedToId], references: [id])
+  author     User?          @relation("ticketAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  assignedTo User?          @relation("ticketAssigned", fields: [assignedToId], references: [id], onDelete: SetNull)
   messages   TicketMessage[]
 }
 
@@ -210,11 +210,11 @@ model TicketMessage {
   content   String
   isStaff   Boolean  @default(false)
   ticketId  String
-  authorId  String
+  authorId  String?
   createdAt DateTime @default(now())
 
   ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  author User   @relation(fields: [authorId], references: [id])
+  author User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
 }
 
 // ==========================================
@@ -277,11 +277,11 @@ model WikiRevision {
   content   String
   summary   String?
   pageId    String
-  editorId  String
+  editorId  String?
   createdAt DateTime @default(now())
 
   page   WikiPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  editor User     @relation(fields: [editorId], references: [id])
+  editor User?     @relation(fields: [editorId], references: [id], onDelete: SetNull)
 }
 
 // ==========================================
