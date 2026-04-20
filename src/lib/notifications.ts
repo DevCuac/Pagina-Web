@@ -40,8 +40,8 @@ export async function markAllAsRead(userId: string) {
 }
 
 // Notify when someone replies to a forum post
-export async function notifyPostReply(post: { id: string; title: string; authorId: string }, replierId: string, replierName: string) {
-  if (post.authorId === replierId) return; // Don't notify self
+export async function notifyPostReply(post: { id: string; title: string; authorId: string | null }, replierId: string, replierName: string) {
+  if (!post.authorId || post.authorId === replierId) return; // Don't notify if no author or self
   await createNotification(
     post.authorId,
     'forum_reply',
@@ -52,7 +52,8 @@ export async function notifyPostReply(post: { id: string; title: string; authorI
 }
 
 // Notify when ticket status changes
-export async function notifyTicketUpdate(ticket: { id: string; subject: string; authorId: string }, status: string) {
+export async function notifyTicketUpdate(ticket: { id: string; subject: string; authorId: string | null }, status: string) {
+  if (!ticket.authorId) return;
   await createNotification(
     ticket.authorId,
     'ticket_update',
@@ -63,8 +64,8 @@ export async function notifyTicketUpdate(ticket: { id: string; subject: string; 
 }
 
 // Notify when a ticket gets a new message
-export async function notifyTicketMessage(ticket: { id: string; subject: string; authorId: string }, senderId: string, senderName: string) {
-  if (ticket.authorId === senderId) return;
+export async function notifyTicketMessage(ticket: { id: string; subject: string; authorId: string | null }, senderId: string, senderName: string) {
+  if (!ticket.authorId || ticket.authorId === senderId) return;
   await createNotification(
     ticket.authorId,
     'ticket_message',
@@ -75,7 +76,7 @@ export async function notifyTicketMessage(ticket: { id: string; subject: string;
 }
 
 // Notify staff and admins when a new ticket is created
-export async function notifyStaffNewTicket(ticket: { id: string; subject: string; authorId: string }, authorName: string) {
+export async function notifyStaffNewTicket(ticket: { id: string; subject: string; authorId: string | null }, authorName: string) {
   const staffUsers = await prisma.user.findMany({
     where: {
       role: {
