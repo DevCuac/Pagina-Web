@@ -296,5 +296,11 @@
     "create_cat": "Create Category",
     "list": "Categories",
     "confirm_del": "Delete this category?"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "mark_all_read": "Mark all as read",
+    "empty_title": "No notifications",
+    "empty_desc": "You don't have any notifications yet"
   }
 }

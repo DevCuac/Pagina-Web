@@ -296,5 +296,11 @@
     "create_cat": "Kategorie erstellen",
     "list": "Kategorien",
     "confirm_del": "Diese Kategorie löschen?"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "mark_all_read": "Alle als gelesen markieren",
+    "empty_title": "Keine Benachrichtigungen",
+    "empty_desc": "Sie haben noch keine Benachrichtigungen"
   }
 }

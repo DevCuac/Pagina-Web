@@ -4,12 +4,16 @@ import { Metadata } from 'next';
 import prisma from '@/lib/db';
 import { auth } from '@/lib/auth';
 import NotificationActions from './NotificationActions';
+import { getLocaleObj, getTranslation } from '@/lib/i18n';
 
 export const metadata: Metadata = { title: 'Notificaciones' };
 
 export default async function NotificationsPage() {
   const session = await auth();
   if (!session) redirect('/login');
+
+  const { dict } = await getLocaleObj();
+  const t = (key: string) => getTranslation(dict, key);
 
   const notifications = await prisma.notification.findMany({
     where: { userId: session.user.id },
@@ -28,7 +32,7 @@ export default async function NotificationsPage() {
     <div className="page-content">
       <div className="container" style={{ maxWidth: '800px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-lg)' }}>
-          <h1>Notificaciones</h1>
+          <h1>{t('notifications.title')}</h1>
           <NotificationActions />
         </div>
 
@@ -68,8 +72,8 @@ export default async function NotificationsPage() {
           <div className="card">
             <div className="empty-state">
               <div className="empty-state-icon">🔔</div>
-              <h3 className="empty-state-title">Sin notificaciones</h3>
-              <p className="empty-state-text">No tienes notificaciones aún</p>
+              <h3 className="empty-state-title">{t('notifications.empty_title')}</h3>
+              <p className="empty-state-text">{t('notifications.empty_desc')}</p>
             </div>
           </div>
         )}
