@@ -3,6 +3,8 @@ import prisma from '@/lib/db';
 import { auth } from '@/lib/auth';
 import { validateMinecraftUsername } from '@/lib/minecraft';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });

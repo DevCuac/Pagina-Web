@@ -14,7 +14,7 @@ export default function ProfileEditPage() {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    fetch('/api/user/profile').then(r => r.json()).then(data => {
+    fetch('/api/user/profile', { cache: 'no-store' }).then(r => r.json()).then(data => {
       setForm({ 
          bio: data.bio || '', 
          minecraftName: data.minecraftName || '',
@@ -36,9 +36,9 @@ export default function ProfileEditPage() {
     });
 
     if (res.ok) {
-      setSuccess('Perfil actualizado correctamente');
-      await update();
-      router.refresh();
+      setSuccess(t('profileEdit.success'));
+      await update({ forceRefresh: true }); // Envía un ping forzado al Provider
+      window.location.reload(); // Recarga destructiva para forzar la actualización de la Navbar si el componente no reacciona
     }
     setLoading(false);
   };
