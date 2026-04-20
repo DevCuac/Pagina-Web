@@ -46,6 +46,12 @@ export default async function ForumDetailPage({ params }: { params: Promise<{ sl
           <span>{forum.name}</span>
         </div>
 
+        {forum.image && (
+          <div className={styles.forumBanner}>
+            <img src={forum.image} alt={forum.name} />
+          </div>
+        )}
+
         <div className={styles.forumHeader}>
           <h1>{forum.icon} {forum.name}</h1>
           {forum.description && <p style={{ color: 'var(--text-muted)' }}>{forum.description}</p>}

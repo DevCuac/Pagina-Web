@@ -102,7 +102,9 @@
     "go_forum": "Zum Forum →",
     "replies": "Antworten",
     "no_posts": "Noch keine Beiträge",
-    "first_post": "Seien Sie der Erste, der einen Forenbeitrag erstellt"
+    "first_post": "Seien Sie der Erste, der einen Forenbeitrag erstellt",
+    "read_more": "Weiterlesen...",
+    "explore_forum": "Forum erkunden"
   },
   "admin": {
     "title": "Administration",

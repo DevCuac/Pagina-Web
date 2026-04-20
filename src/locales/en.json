@@ -102,7 +102,9 @@
     "go_forum": "Go to Forum →",
     "replies": "replies",
     "no_posts": "No posts yet",
-    "first_post": "Be the first to create a forum post"
+    "first_post": "Be the first to create a forum post",
+    "read_more": "Continue reading...",
+    "explore_forum": "Explore Forum"
   },
   "admin": {
     "title": "Administration",

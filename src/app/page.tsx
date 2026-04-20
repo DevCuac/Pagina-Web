@@ -46,10 +46,20 @@ async function getGameModes() {
   });
 }
 
+async function getFeaturedForums() {
+  return prisma.forum.findMany({
+    where: { image: { not: null } },
+    orderBy: { order: 'asc' },
+    take: 6,
+    include: { _count: { select: { posts: true } } }
+  });
+}
+
 export default async function HomePage() {
   const { userCount, postCount, serverStatus, serverIp } = await getStats();
   const latestPosts = await getLatestPosts();
   const gameModes = await getGameModes();
+  const featuredForums = await getFeaturedForums();
   const { dict, locale } = await getLocaleObj();
   const t = (key: string) => getTranslation(dict, key);
 
@@ -159,44 +169,45 @@ export default async function HomePage() {
       {/* Forums Area: 2-Column Layout */}
       <section className="container mt-xl">
         <div className={styles.homeContentGrid}>
-          {/* Main Left Column (News feed format) */}
+          {/* Main Left Column (News feed format - Showing Forums) */}
           <div className={styles.newsFeed}>
-            {latestPosts.slice(0, 5).map((post) => (
-              <div key={`news-${post.id}`} className={styles.newsCard}>
+            {featuredForums.map((forum) => (
+              <div key={`news-${forum.id}`} className={styles.newsCard}>
                 <div className={styles.newsHeader}>
-                  <Link href={`/forums/${post.forum.slug}/${post.id}`} className={styles.newsTitle}>
-                    {post.title}
+                  <Link href={`/forums/${forum.slug}`} className={styles.newsTitle}>
+                    {forum.name}
                   </Link>
                   <span className={styles.newsDate}>
-                    {new Date(post.createdAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'de-DE', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    {new Date(forum.createdAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'de-DE', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </span>
                 </div>
                 
-                {post.image && (
-                  <Link href={`/forums/${post.forum.slug}/${post.id}`} className={styles.newsImageContainer}>
-                    <img src={post.image} alt={post.title} className={styles.newsImage} />
+                {forum.image && (
+                  <Link href={`/forums/${forum.slug}`} className={styles.newsImageContainer}>
+                    <img src={forum.image} alt={forum.name} className={styles.newsImage} />
                   </Link>
                 )}
                 
                 <div className={styles.newsContent}>
-                  <p>{post.content.length > 250 ? post.content.substring(0, 250) + '...' : post.content}</p>
+                  <p>{forum.description ? (forum.description.length > 250 ? forum.description.substring(0, 250) + '...' : forum.description) : t('home.no_description') || 'Join the conversation in our official forum.'}</p>
                 </div>
                 
                 <div className={styles.newsFooter}>
                   <div className={styles.newsAuthor}>
-                    {t('admin.by')} <span style={{ color: post.author.role.color }}>{post.author.username}</span> {locale === 'en' ? 'at' : 'um'} {new Date(post.createdAt).toLocaleTimeString(locale === 'en' ? 'en-US' : 'de-DE', { hour: '2-digit', minute: '2-digit' })}
+                    {/* For forums we show the Icon or emoji instead of author */}
+                    <span style={{ fontSize: '1.2rem', marginRight: '8px' }}>{forum.icon}</span> {t('admin.manage')}
                   </div>
-                  <Link href={`/forums/${post.forum.slug}/${post.id}#comments`} className={styles.newsCommentsBtn}>
-                    {t('home.read_more') || 'Continue reading...'}
+                  <Link href={`/forums/${forum.slug}`} className={styles.newsCommentsBtn}>
+                    {t('home.explore_forum')}
                   </Link>
                 </div>
                 <div className={styles.newsSubFooter}>
-                  {post._count.comments} {t('forums.posts')}
+                  {forum._count.posts} {t('forums.posts')}
                 </div>
               </div>
             ))}
 
-            {latestPosts.length === 0 && (
+            {featuredForums.length === 0 && (
               <div className="card">
                 <div className="empty-state">
                   <div className="empty-state-icon">📝</div>
