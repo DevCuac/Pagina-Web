@@ -317,5 +317,30 @@
     "mark_all_read": "Mark all as read",
     "empty_title": "No notifications",
     "empty_desc": "You don't have any notifications yet"
+  },
+  "footer": {
+    "tagline": "The Ultimate Minecraft Experience",
+    "nav_title": "Navigation",
+    "nav_home": "Home",
+    "nav_games": "Game Modes",
+    "nav_forums": "Forums",
+    "nav_members": "Members",
+    "support_title": "Support",
+    "support_center": "Support Center",
+    "support_status": "Server Status",
+    "community_title": "Community",
+    "rights": "All rights reserved."
+  },
+  "verify": {
+    "title_success": "Account Verified Successfully!",
+    "desc_success": "Thank you for confirming your email. You now have full access to ticket creation and community forums.",
+    "btn_login": "Go to Login",
+    "invalid_request": "Invalid Request",
+    "invalid_request_desc": "Verification parameters are missing from the link.",
+    "invalid_link": "Invalid Link",
+    "invalid_link_desc": "This verification code does not exist or has already been used.",
+    "expired_link": "Expired Link",
+    "expired_link_desc": "This confirmation link has expired. Please log in to request a new one.",
+    "user_not_found": "User not found in records."
   }
 }

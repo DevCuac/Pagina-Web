@@ -317,5 +317,30 @@
     "mark_all_read": "Alle als gelesen markieren",
     "empty_title": "Keine Benachrichtigungen",
     "empty_desc": "Sie haben noch keine Benachrichtigungen"
+  },
+  "footer": {
+    "tagline": "Das ultimative Minecraft-Erlebnis",
+    "nav_title": "Navigation",
+    "nav_home": "Startseite",
+    "nav_games": "Spielmodi",
+    "nav_forums": "Foren",
+    "nav_members": "Mitglieder",
+    "support_title": "Support",
+    "support_center": "Support-Center",
+    "support_status": "Server-Status",
+    "community_title": "Community",
+    "rights": "Alle Rechte vorbehalten."
+  },
+  "verify": {
+    "title_success": "Konto erfolgreich verifiziert!",
+    "desc_success": "Vielen Dank für die Bestätigung Ihrer E-Mail. Sie haben nun vollen Zugriff auf die Erstellung von Tickets und die Community-Foren.",
+    "btn_login": "Zum Login",
+    "invalid_request": "Ungültige Anfrage",
+    "invalid_request_desc": "In dem Link fehlen Verifizierungsparameter.",
+    "invalid_link": "Ungültiger Link",
+    "invalid_link_desc": "Dieser Verifizierungscode existiert nicht oder wurde bereits verwendet.",
+    "expired_link": "Abgelaufener Link",
+    "expired_link_desc": "Dieser Bestätigungslink ist abgelaufen. Bitte melden Sie sich an, um einen neuen anzufordern.",
+    "user_not_found": "Benutzer in den Datensätzen nicht gefunden."
   }
 }
