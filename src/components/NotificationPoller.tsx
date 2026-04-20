@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 export default function NotificationPoller() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const previousCountRef = useRef<number>(0);
 
@@ -38,7 +38,6 @@ export default function NotificationPoller() {
         // Role Sync Checker
         if (data.role && data.role !== session.user.role) {
           console.log('[Role Sync] Role mismatched. Forcing session update.');
-          const { update } = await import('next-auth/react');
           await update({ forceRefresh: true });
           window.location.reload();
         }
