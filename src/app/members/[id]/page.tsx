@@ -5,6 +5,8 @@ import prisma from '@/lib/db';
 import { getMinecraftHeadUrl } from '@/lib/minecraft';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 
+export const revalidate = 0; // Evitar el Caché mortal de Vercel en la página de Perfil
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const user = await prisma.user.findUnique({ where: { id }, select: { username: true } });

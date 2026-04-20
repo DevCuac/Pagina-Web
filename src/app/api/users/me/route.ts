@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
     where: { id: session.user.id },
     select: {
       avatar: true,
+      banner: true,
       bio: true,
       minecraftName: true,
     }
