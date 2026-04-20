@@ -163,45 +163,47 @@ export default async function HomePage() {
           <Link href="/forums" className="btn btn-ghost">{t('home.go_forum')}</Link>
         </div>
 
-        {latestPosts.length > 0 ? (
-          <div className={styles.postList}>
-            {latestPosts.map((post) => (
-              <Link key={post.id} href={`/forums/${post.forum.slug}/${post.id}`} className={styles.postItem}>
-                <div className={styles.postAvatar}>
-                  {post.author.avatar ? (
-                    <img src={post.author.avatar} alt="" className="avatar-sm" />
-                  ) : (
-                    <div className="avatar-placeholder avatar-sm" style={{ width: 32, height: 32, fontSize: '0.75rem' }}>
-                      {post.author.username[0]}
-                    </div>
-                  )}
-                </div>
-                <div className={styles.postContent}>
-                  <h4 className={styles.postTitle}>{post.title}</h4>
-                  <p className={styles.postMeta}>
-                    <span style={{ color: post.author.role.color }}>{post.author.username}</span>
-                    {' · '}
-                    {post.forum.name}
-                    {' · '}
-                    {post._count.comments} {t('home.replies')}
-                  </p>
-                </div>
-                <span className={styles.postTime}>
-                  {new Date(post.createdAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'de-DE', { day: 'numeric', month: 'short' })}
-                </span>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="card">
-            <div className="empty-state">
-              <div className="empty-state-icon">📝</div>
-              <h3 className="empty-state-title">{t('home.no_posts')}</h3>
-              <p className="empty-state-text">{t('home.first_post')}</p>
-              <Link href="/forums" className="btn btn-primary mt-md">{t('home.go_forum')}</Link>
+        <div className={styles.latestThreadsContainer}>
+          <div className={styles.hypixelSidebar}>
+            <div className={styles.hypixelSidebarHeader}>
+              <h3>{t('home.latest_posts')}</h3>
             </div>
+            
+            {latestPosts.length > 0 ? (
+              <div className={styles.hypixelPostList}>
+                {latestPosts.map((post) => (
+                  <Link key={post.id} href={`/forums/${post.forum.slug}/${post.id}`} className={styles.hypixelPostItem}>
+                    <div className={styles.hypixelAvatar}>
+                      {post.author.avatar ? (
+                        <img src={post.author.avatar} alt={post.author.username} />
+                      ) : (
+                        <div className="avatar-placeholder" style={{ width: 24, height: 24, fontSize: '0.65rem' }}>
+                          {post.author.username[0]}
+                        </div>
+                      )}
+                    </div>
+                    <div className={styles.hypixelPostContent}>
+                      <h4 className={styles.hypixelPostTitle}>{post.title}</h4>
+                      <div className={styles.hypixelPostMeta}>
+                        <span style={{ color: post.author.role.color }}>{post.author.username}</span>
+                        {' · '}
+                        {new Date(post.createdAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                      <div className={styles.hypixelPostCategory}>
+                        {post.forum.name}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.hypixelEmpty}>
+                <p>{t('home.no_posts')}</p>
+                <Link href="/forums">{t('home.first_post')}</Link>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </section>
     </div>
   );

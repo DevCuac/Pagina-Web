@@ -256,62 +256,115 @@
 }
 
 /* ==========================================
-   POST LIST
+   HYPIXEL LATEST THREADS WIDGET
    ========================================== */
 
-.postList {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-
-.postItem {
+.latestThreadsContainer {
   display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-lg);
-  border-bottom: 1px solid var(--border-muted);
-  text-decoration: none;
-  transition: background var(--transition-fast);
+  justify-content: flex-start; /* Let it sit on the left or center if we change layout */
 }
 
-.postItem:last-child {
+/* Assuming it will act like a sidebar, constrain width */
+.hypixelSidebar {
+  width: 100%;
+  max-width: 320px;
+  background: #141414; /* Deep dark like Hypixel sidebar */
+  border: 1px solid #2d2d2d;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.hypixelSidebarHeader {
+  background: #1b1b1b;
+  padding: 10px 15px;
+  border-bottom: 1px solid #2d2d2d;
+}
+
+.hypixelSidebarHeader h3 {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #dfdfdf;
+  margin: 0;
+  text-transform: none;
+}
+
+.hypixelPostList {
+  display: flex;
+  flex-direction: column;
+}
+
+.hypixelPostItem {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 15px;
+  border-bottom: 1px solid #212121;
+  text-decoration: none;
+  gap: 10px;
+  transition: background 0.1s ease;
+}
+
+.hypixelPostItem:last-child {
   border-bottom: none;
 }
 
-.postItem:hover {
-  background: var(--bg-elevated);
+.hypixelPostItem:hover {
+  background: #1f1f1f;
 }
 
-.postAvatar {
+.hypixelAvatar {
   flex-shrink: 0;
+  padding-top: 2px;
 }
 
-.postContent {
+.hypixelAvatar img {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.hypixelPostContent {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.postTitle {
-  font-size: 0.9375rem;
+.hypixelPostTitle {
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary);
-  white-space: nowrap;
+  color: #cccccc;
+  line-height: 1.3;
+  margin: 0;
+  /* limit to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.postMeta {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin-top: 0.125rem;
+.hypixelPostItem:hover .hypixelPostTitle {
+  color: #ffffff;
 }
 
-.postTime {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  white-space: nowrap;
+.hypixelPostMeta {
+  font-size: 0.75rem;
+  color: #888888;
+}
+
+.hypixelPostCategory {
+  font-size: 0.75rem;
+  color: #aaaaaa;
+}
+
+.hypixelEmpty {
+  padding: 20px;
+  text-align: center;
+  color: #888888;
+  font-size: 0.85rem;
 }
 
 /* ==========================================
