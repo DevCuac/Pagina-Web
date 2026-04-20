@@ -13,6 +13,10 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const perms = body.permissions ? typeof body.permissions === 'string' ? body.permissions : JSON.stringify(body.permissions) : '{}';
 
+  if (body.isDefault) {
+    await prisma.role.updateMany({ data: { isDefault: false } });
+  }
+
   const role = await prisma.role.create({ 
     data: { 
       name: body.name, 
@@ -20,6 +24,7 @@ export async function POST(request: NextRequest) {
       weight: body.weight || 0, 
       isStaff: body.isStaff || false, 
       isAdmin: body.isAdmin || false,
+      isDefault: body.isDefault || false,
       permissions: perms
     } 
   });
@@ -39,7 +44,14 @@ export async function PATCH(request: NextRequest) {
     isStaff: body.isStaff, 
     isAdmin: body.isAdmin 
   };
-  
+
+  if (body.isDefault !== undefined) {
+    if (body.isDefault === true) {
+      await prisma.role.updateMany({ data: { isDefault: false } });
+    }
+    updateData.isDefault = body.isDefault;
+  }
+
   if (perms !== null) {
     updateData.permissions = perms;
   }

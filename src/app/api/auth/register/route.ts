@@ -98,8 +98,12 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, userId: user.id, verificationRequired }, { status: 201 });
-  } catch (error) {
-    console.error('Registration error:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Registration error details:', error);
+    return NextResponse.json({ 
+      error: 'Error interno del servidor', 
+      details: error.message,
+      code: error.code // Prisma error code if any
+    }, { status: 500 });
   }
 }

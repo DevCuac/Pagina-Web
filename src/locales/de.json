@@ -261,12 +261,13 @@
     "legacy": "Rollenstufe (Legacy)",
     "legacy_staff": "📌 Ist Staff",
     "legacy_admin": "👑 Ist Admin (Vollzugriff)",
-    "granular": "Detaillierte Berechtigungen",
-    "perm_admin": "VERWALTUNG",
+    "granular": "Granulare Berechtigungen",
+    "perm_admin": "ADMINISTRATION",
     "perm_content": "INHALT",
     "perm_support": "SUPPORT",
     "perm_forums": "FOREN",
-    "btn_register": "Rolle registrieren",
+    "is_default": "Als Standardrolle festlegen",
+    "btn_register": "Rolle Registrieren",
     "existing": "Aktuelle Struktur"
   },
   "admin_forums_page": {

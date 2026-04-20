@@ -266,6 +266,7 @@
     "perm_content": "CONTENT",
     "perm_support": "SUPPORT",
     "perm_forums": "FORUMS",
+    "is_default": "Set as Default Role",
     "btn_register": "Register Role",
     "existing": "Current Structure"
   },

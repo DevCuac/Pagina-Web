@@ -15,6 +15,7 @@ export default function AdminRolesPage() {
     weight: 0, 
     isStaff: false, 
     isAdmin: false,
+    isDefault: false,
     permissions: {} as Record<string, boolean>
   });
   const [editing, setEditing] = useState<string | null>(null);
@@ -32,7 +33,7 @@ export default function AdminRolesPage() {
 
     await fetch('/api/admin/roles', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     
-    setForm({ name: '', color: '#4f7df9', weight: 0, isStaff: false, isAdmin: false, permissions: {} });
+    setForm({ name: '', color: '#4f7df9', weight: 0, isStaff: false, isAdmin: false, isDefault: false, permissions: {} });
     setEditing(null);
     setLoading(false);
     
@@ -50,6 +51,7 @@ export default function AdminRolesPage() {
       weight: role.weight, 
       isStaff: role.isStaff, 
       isAdmin: role.isAdmin,
+      isDefault: role.isDefault,
       permissions: parsedPerms
     });
     setEditing(role.id);
@@ -120,6 +122,10 @@ export default function AdminRolesPage() {
                   <input type="checkbox" checked={form.isAdmin} onChange={e => setForm({ ...form, isAdmin: e.target.checked })} />
                   {t('admin_roles.legacy_admin')}
                 </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', cursor: 'pointer', fontSize: '0.9375rem', color: 'var(--accent-info)', fontWeight: 600 }}>
+                  <input type="checkbox" checked={form.isDefault} onChange={e => setForm({ ...form, isDefault: e.target.checked })} />
+                  {t('admin_roles.is_default')}
+                </label>
               </div>
             </div>
 
@@ -164,7 +170,7 @@ export default function AdminRolesPage() {
                 {editing ? t('admin_games.btn_update') : t('admin_roles.btn_register')}
               </button>
               {editing && (
-                <button type="button" className="btn btn-secondary" onClick={() => { setEditing(null); setForm({ name: '', color: '#4f7df9', weight: 0, isStaff: false, isAdmin: false, permissions: {} }); }}>
+                <button type="button" className="btn btn-secondary" onClick={() => { setEditing(null); setForm({ name: '', color: '#4f7df9', weight: 0, isStaff: false, isAdmin: false, isDefault: false, permissions: {} }); }}>
                   {t('admin_games.btn_cancel')}
                 </button>
               )}
