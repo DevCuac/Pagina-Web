@@ -105,7 +105,9 @@ export async function sendVerificationEmail(email: string, username: string, tok
               <!-- Cabecera / Logo -->
               <tr>
                 <td align="center" style="background-color: #1a1a2e; padding: 30px;">
-                  <img src="https://via.placeholder.com/200x50/1a1a2e/4f7df9?text=CROSSPIXEL" alt="CrossPixel Network" style="display: block; max-width: 100%; height: auto;" />
+                  <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 2px;">
+                    <span style="color: #ffffff;">CROSS</span><span style="color: #4f7df9;">PIXEL</span>
+                  </h1>
                 </td>
               </tr>
               
