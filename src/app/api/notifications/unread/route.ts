@@ -21,5 +21,10 @@ export async function GET() {
     orderBy: { createdAt: 'desc' },
   });
 
-  return NextResponse.json({ count, latest });
+  const me = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: { select: { name: true } } }
+  });
+
+  return NextResponse.json({ count, latest, role: me?.role?.name });
 }

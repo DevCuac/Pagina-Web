@@ -35,6 +35,14 @@ export default function NotificationPoller() {
         previousCountRef.current = currentCount;
         setUnreadCount(currentCount);
 
+        // Role Sync Checker
+        if (data.role && data.role !== session.user.role) {
+          console.log('[Role Sync] Role mismatched. Forcing session update.');
+          const { update } = await import('next-auth/react');
+          await update({ forceRefresh: true });
+          window.location.reload();
+        }
+
         // Dispatch a custom event so other components (like Navbar) can update their badge count without refreshing context
         window.dispatchEvent(new CustomEvent('notification_count_updated', { detail: currentCount }));
       } catch (error) {

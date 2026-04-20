@@ -3,6 +3,8 @@ import styles from './page.module.css';
 import prisma from '@/lib/db';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 
+export const revalidate = 30; // Regenerar el index cada 30 segundos (Descongela los Foros)
+
 async function getStats() {
   const [userCount, postCount, serverData] = await Promise.all([
     prisma.user.count(),
