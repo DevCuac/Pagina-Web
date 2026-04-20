@@ -8,7 +8,8 @@ export default async function DashboardPage() {
   const session = await auth();
   if (!session) redirect('/login');
 
-  const [postCount, ticketCount, unreadNotifs] = await Promise.all([
+  const [dbUser, postCount, ticketCount, unreadNotifs] = await Promise.all([
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { bio: true, banner: true } }),
     prisma.forumPost.count({ where: { authorId: session.user.id } }),
     prisma.ticket.count({ where: { authorId: session.user.id } }),
     prisma.notification.count({ where: { userId: session.user.id, isRead: false } }),
@@ -17,19 +18,40 @@ export default async function DashboardPage() {
   const { dict } = await getLocaleObj();
   const t = (key: string) => getTranslation(dict, key);
 
+  const finalBanner = dbUser?.banner || session.user.banner;
+
   return (
     <div className="page-content">
       <div className="container" style={{ maxWidth: '900px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-lg)', marginBottom: 'var(--space-xl)' }}>
-          <div className="avatar-placeholder avatar-xl" style={{ width: 64, height: 64, fontSize: '1.5rem', borderColor: session.user.roleColor }}>
-            {session.user.avatar || session.user.image ? (
-              <img src={session.user.avatar || session.user.image || ''} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-            ) : session.user.username[0]}
+        
+        {/* Banner Area */}
+        <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 'var(--space-xl)' }}>
+          <div style={{
+            height: '120px',
+            background: finalBanner
+              ? `url(${finalBanner}) center/cover`
+              : `linear-gradient(135deg, ${session.user.roleColor}33, var(--bg-elevated))`,
+          }} />
+          <div style={{ padding: 'var(--space-lg)', display: 'flex', gap: 'var(--space-lg)', alignItems: 'flex-end', marginTop: '-48px' }}>
+            <div className="avatar-placeholder avatar-2xl" style={{
+              width: 96, height: 96, fontSize: '2rem',
+              borderColor: session.user.roleColor, borderWidth: '3px',
+              background: 'var(--bg-surface)', flexShrink: 0
+            }}>
+              {session.user.avatar || session.user.image ? (
+                <img src={session.user.avatar || session.user.image || ''} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+              ) : session.user.username[0]}
+            </div>
+            <div style={{ flex: 1, paddingBottom: 'var(--space-sm)' }}>
+              <h1 style={{ fontSize: '1.5rem', color: session.user.roleColor }}>{t('dashboard.greeting').split(',')[0]}, {session.user.username}!</h1>
+              <p style={{ color: 'var(--text-muted)' }}>{t('dashboard.greeting').split(', ')[1] || 'Welcome back'}</p>
+            </div>
           </div>
-          <div>
-            <h1 style={{ fontSize: '1.5rem' }}>{t('dashboard.greeting').split(',')[0]}, <span style={{ color: session.user.roleColor }}>{session.user.username}</span>!</h1>
-            <p style={{ color: 'var(--text-muted)' }}>{t('dashboard.greeting').split(', ')[1] || 'Welcome'}</p>
-          </div>
+          {dbUser?.bio && (
+            <div style={{ padding: '0 var(--space-lg) var(--space-lg)', color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>
+              {dbUser.bio}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-3" style={{ marginBottom: 'var(--space-xl)' }}>
