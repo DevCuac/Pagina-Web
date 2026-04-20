@@ -8,6 +8,7 @@ import { getLocaleObj } from '@/lib/i18n';
 import { I18nProvider } from '@/components/I18nProvider';
 
 import prisma from '@/lib/db';
+import { Analytics } from '@vercel/analytics/react';
 
 export async function generateMetadata(): Promise<Metadata> {
   const customSettings = await prisma.siteSetting.findMany({
@@ -49,6 +50,7 @@ export default async function RootLayout({
             <Navbar />
             <main>{children}</main>
             <Footer />
+            <Analytics />
           </SessionProvider>
         </I18nProvider>
       </body>
