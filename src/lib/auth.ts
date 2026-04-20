@@ -33,10 +33,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const isValid = compareSync(credentials.password as string, user.passwordHash);
         if (!isValid) return null;
 
-        // Block login if unverified and settings enforce it
+        // Block login if unverified and internal verification is enforced
         if (!user.emailVerified) {
-          const setting = await prisma.siteSetting.findUnique({ where: { key: 'email_verification_enabled' } });
-          if (setting?.value === 'true') {
+          const isVerificationRequired = process.env.EMAIL_VERIFICATION_REQUIRED === 'true';
+          if (isVerificationRequired) {
              throw new Error('UnverifiedEmail');
           }
         }
