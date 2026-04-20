@@ -19,6 +19,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     data: {
       title: parsed.data.title,
       content: parsed.data.content,
+      image: parsed.data.image && parsed.data.image.trim() !== '' ? parsed.data.image : null,
       forumId: forum.id,
       authorId: session.user.id,
     },

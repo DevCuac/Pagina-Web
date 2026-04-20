@@ -29,10 +29,10 @@ async function getStats() {
 
 async function getLatestPosts() {
   return prisma.forumPost.findMany({
-    take: 5,
+    take: 10,
     orderBy: { createdAt: 'desc' },
     include: {
-      author: { select: { username: true, avatar: true, role: { select: { color: true } } } },
+      author: { select: { username: true, avatar: true, role: { select: { color: true, name: true } } } },
       forum: { select: { name: true, slug: true } },
       _count: { select: { comments: true } },
     },
@@ -156,14 +156,58 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Latest Forum Posts */}
+      {/* Forums Area: 2-Column Layout */}
       <section className="container mt-xl">
-        <div className={styles.sectionHeader}>
-          <h2>{t('home.latest_posts')}</h2>
-          <Link href="/forums" className="btn btn-ghost">{t('home.go_forum')}</Link>
-        </div>
+        <div className={styles.homeContentGrid}>
+          {/* Main Left Column (News feed format) */}
+          <div className={styles.newsFeed}>
+            {latestPosts.slice(0, 5).map((post) => (
+              <div key={`news-${post.id}`} className={styles.newsCard}>
+                <div className={styles.newsHeader}>
+                  <Link href={`/forums/${post.forum.slug}/${post.id}`} className={styles.newsTitle}>
+                    {post.title}
+                  </Link>
+                  <span className={styles.newsDate}>
+                    {new Date(post.createdAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'de-DE', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </span>
+                </div>
+                
+                {post.image && (
+                  <Link href={`/forums/${post.forum.slug}/${post.id}`} className={styles.newsImageContainer}>
+                    <img src={post.image} alt={post.title} className={styles.newsImage} />
+                  </Link>
+                )}
+                
+                <div className={styles.newsContent}>
+                  <p>{post.content.length > 250 ? post.content.substring(0, 250) + '...' : post.content}</p>
+                </div>
+                
+                <div className={styles.newsFooter}>
+                  <div className={styles.newsAuthor}>
+                    {t('admin.by')} <span style={{ color: post.author.role.color }}>{post.author.username}</span> {locale === 'en' ? 'at' : 'um'} {new Date(post.createdAt).toLocaleTimeString(locale === 'en' ? 'en-US' : 'de-DE', { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                  <Link href={`/forums/${post.forum.slug}/${post.id}#comments`} className={styles.newsCommentsBtn}>
+                    {t('home.read_more') || 'Continue reading...'}
+                  </Link>
+                </div>
+                <div className={styles.newsSubFooter}>
+                  {post._count.comments} {t('forums.posts')}
+                </div>
+              </div>
+            ))}
 
-        <div className={styles.latestThreadsContainer}>
+            {latestPosts.length === 0 && (
+              <div className="card">
+                <div className="empty-state">
+                  <div className="empty-state-icon">📝</div>
+                  <h3 className="empty-state-title">{t('home.no_posts')}</h3>
+                  <Link href="/forums" className="btn btn-primary mt-md">{t('home.go_forum')}</Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right Sidebar (Latest Threads Widget) */}
           <div className={styles.hypixelSidebar}>
             <div className={styles.hypixelSidebarHeader}>
               <h3>{t('home.latest_posts')}</h3>
@@ -172,7 +216,7 @@ export default async function HomePage() {
             {latestPosts.length > 0 ? (
               <div className={styles.hypixelPostList}>
                 {latestPosts.map((post) => (
-                  <Link key={post.id} href={`/forums/${post.forum.slug}/${post.id}`} className={styles.hypixelPostItem}>
+                  <Link key={`side-${post.id}`} href={`/forums/${post.forum.slug}/${post.id}`} className={styles.hypixelPostItem}>
                     <div className={styles.hypixelAvatar}>
                       {post.author.avatar ? (
                         <img src={post.author.avatar} alt={post.author.username} />

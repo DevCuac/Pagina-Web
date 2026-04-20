@@ -146,6 +146,7 @@ model ForumPost {
   id        String   @id @default(cuid())
   title     String
   content   String
+  image     String?
   isPinned  Boolean  @default(false)
   isLocked  Boolean  @default(false)
   views     Int      @default(0)

@@ -8,6 +8,7 @@ export default function NewPostPage({ params }: { params: Promise<{ slug: string
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [image, setImage] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const resolvedParams = use(params);
@@ -21,7 +22,7 @@ export default function NewPostPage({ params }: { params: Promise<{ slug: string
     const res = await fetch(`/api/forums/${slug}/posts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, content }),
+      body: JSON.stringify({ title, content, image }),
     });
 
     const data = await res.json();
@@ -75,6 +76,18 @@ export default function NewPostPage({ params }: { params: Promise<{ slug: string
               minLength={3}
               maxLength={200}
               required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="post-image">Imagen de Portada (Opcional)</label>
+            <input
+              id="post-image"
+              type="url"
+              className="form-input"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              placeholder="https://i.imgur.com/... (URL de imagen horizontal para Noticias)"
             />
           </div>
 

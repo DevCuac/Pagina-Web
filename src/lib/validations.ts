@@ -15,6 +15,7 @@ export const loginSchema = z.object({
 export const forumPostSchema = z.object({
   title: z.string().min(3, 'El título debe tener al menos 3 caracteres').max(200, 'Máximo 200 caracteres'),
   content: z.string().min(10, 'El contenido debe tener al menos 10 caracteres'),
+  image: z.string().url('URL de la imagen inválida').optional().or(z.literal('')),
 });
 
 export const commentSchema = z.object({
