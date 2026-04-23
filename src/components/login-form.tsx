@@ -121,7 +121,7 @@ export function LoginForm({
             <span className="w-full border-t border-zinc-800/30" />
           </div>
           <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.3em]">
-            <span className="bg-zinc-950 px-4 text-zinc-600">
+            <span className="bg-[#0a0a0c] px-4 text-zinc-600" style={{ backgroundColor: 'var(--bg-base)' }}>
               {t('auth.or_continue_with') || 'O CONTINÚA CON'}
             </span>
           </div>

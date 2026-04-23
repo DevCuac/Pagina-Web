@@ -4,9 +4,9 @@
   left: 0;
   right: 0;
   height: var(--navbar-height);
-  background: rgba(13, 17, 23, 0.85);
+  background: var(--bg-overlay);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-muted);
+  border-bottom: 1px solid var(--border-default);
   z-index: 100;
 }
 

@@ -11,18 +11,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 420px;
+  min-height: 85vh;
   padding-top: var(--navbar-height);
   overflow: hidden;
-  background: linear-gradient(135deg, #0d1117 0%, #161b2e 40%, #1a1f3a 60%, #0d1117 100%);
+  background: radial-gradient(circle at center, #1a1f3a 0%, #0a0a0c 100%);
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(79, 125, 249, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 50%, rgba(88, 166, 255, 0.06) 0%, transparent 60%);
+    radial-gradient(ellipse at 50% -20%, rgba(0, 112, 255, 0.15) 0%, transparent 70%),
+    radial-gradient(ellipse at 50% 120%, rgba(0, 112, 255, 0.1) 0%, transparent 70%);
+  opacity: 0.8;
 }
 
 .heroContent {
@@ -146,9 +147,14 @@
    ========================================== */
 
 .statsBar {
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-muted);
+  background: rgba(18, 18, 20, 0.8);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   padding: var(--space-xl) 0;
+  position: relative;
+  z-index: 10;
+  margin-top: -64px; /* Slight overlap with hero */
 }
 
 .statsGrid {
@@ -195,9 +201,9 @@
 .gameCard {
   display: flex;
   flex-direction: column;
-  background: var(--bg-surface);
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-base) 100%);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   overflow: hidden;
   text-decoration: none;
   transition: all var(--transition-base);
@@ -278,12 +284,18 @@
 }
 
 .newsCard {
-  background: #141414; /* Deep dark like Hypixel */
-  border: 1px solid #2d2d2d;
-  border-radius: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   font-family: var(--font-sans);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.newsCard:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-4px);
 }
 
 .newsHeader {

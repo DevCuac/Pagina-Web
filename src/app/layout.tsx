@@ -46,7 +46,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={cn("dark", inter.variable, outfit.variable)}>
-      <body className="font-sans antialiased bg-zinc-950 text-zinc-200">
+      <body className="font-sans antialiased text-zinc-100">
         <I18nProvider locale={locale} dict={dict}>
           <ToastProvider>
             <SessionProvider>

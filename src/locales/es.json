@@ -25,7 +25,7 @@
     "minecraft_name": "Nombre en Minecraft (opcional)",
     "minecraft_hint": "Tu nombre de usuario en Minecraft Java Edition",
     "login_btn": "Iniciar Sesión",
-    "login_loading": "Iniciando...",
+    "loading": "Iniciando...",
     "register_btn": "Crear Cuenta",
     "register_loading": "Creando...",
     "or_continue_with": "O continúa con",
