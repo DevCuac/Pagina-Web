@@ -13,7 +13,17 @@ export default function ProfileEditPage() {
   const router = useRouter();
   const { showToast } = useToast();
   
-  const [form, setForm] = useState({ bio: '', minecraftName: '', avatar: '', banner: '' });
+  const [form, setForm] = useState({ 
+    bio: '', 
+    minecraftName: '', 
+    avatar: '', 
+    banner: '',
+    instagram: '',
+    twitter: '',
+    discord: '',
+    youtube: '',
+    facebook: ''
+  });
   const [passForm, setPassForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [loading, setLoading] = useState(false);
   const [passLoading, setPassLoading] = useState(false);
@@ -24,7 +34,12 @@ export default function ProfileEditPage() {
          bio: data.bio || '', 
          minecraftName: data.minecraftName || '',
          avatar: data.avatar || '',
-         banner: data.banner || ''
+         banner: data.banner || '',
+         instagram: data.instagram || '',
+         twitter: data.twitter || '',
+         discord: data.discord || '',
+         youtube: data.youtube || '',
+         facebook: data.facebook || ''
       });
     });
   }, []);
@@ -200,6 +215,32 @@ export default function ProfileEditPage() {
                       Enter your name to see your skin
                     </div>
                   )}
+                </div>
+              </div>
+
+              <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '20px 0' }} />
+              
+              <h4 style={{ marginBottom: '15px', fontSize: '1rem', color: 'var(--text-muted)' }}>Social Networks</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                <div className="form-group">
+                  <label className="form-label">Instagram Username</label>
+                  <input className="form-input" value={form.instagram} onChange={e => setForm({...form, instagram: e.target.value})} placeholder="@username" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Twitter/X Username</label>
+                  <input className="form-input" value={form.twitter} onChange={e => setForm({...form, twitter: e.target.value})} placeholder="@username" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Discord Tag</label>
+                  <input className="form-input" value={form.discord} onChange={e => setForm({...form, discord: e.target.value})} placeholder="user#0000" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">YouTube Channel Name</label>
+                  <input className="form-input" value={form.youtube} onChange={e => setForm({...form, youtube: e.target.value})} placeholder="Channel Name" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Facebook Profile Link</label>
+                  <input className="form-input" value={form.facebook} onChange={e => setForm({...form, facebook: e.target.value})} placeholder="facebook.com/user" />
                 </div>
               </div>
               

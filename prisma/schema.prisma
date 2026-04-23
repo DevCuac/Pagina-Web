@@ -19,9 +19,17 @@ model User {
   passwordHash  String?
   avatar        String?   @db.LongText
   banner        String?   @db.LongText
-  bio           String?
+  bio           String?   @db.Text
   minecraftUuid String?   @unique
   minecraftName String?
+  
+  // Social Media
+  instagram     String?
+  twitter       String?
+  discord       String?
+  youtube       String?
+  facebook      String?
+
   discordId     String?   @unique
   googleId      String?   @unique
   roleId        String

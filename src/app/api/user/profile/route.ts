@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
-  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { bio: true, minecraftName: true, minecraftUuid: true, avatar: true, banner: true } });
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { bio: true, minecraftName: true, minecraftUuid: true, avatar: true, banner: true, instagram: true, twitter: true, discord: true, youtube: true, facebook: true } });
   return NextResponse.json(user);
 }
 
@@ -33,6 +33,12 @@ export async function PATCH(request: NextRequest) {
     updateData.minecraftUuid = null;
   }
 
-  await prisma.user.update({ where: { id: session.user.id }, data: updateData });
+  if (body.instagram !== undefined) updateData.instagram = body.instagram;
+  if (body.twitter !== undefined) updateData.twitter = body.twitter;
+  if (body.discord !== undefined) updateData.discord = body.discord;
+  if (body.youtube !== undefined) updateData.youtube = body.youtube;
+  if (body.facebook !== undefined) updateData.facebook = body.facebook;
+
+  await (prisma.user as any).update({ where: { id: session.user.id }, data: updateData });
   return NextResponse.json({ success: true });
 }
