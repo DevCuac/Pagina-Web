@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import prisma from '@/lib/db';
-import { getMinecraftHeadUrl } from '@/lib/minecraft';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
+import ProfileActions from '@/components/profile/ProfileActions';
 
-export const revalidate = 0; // Evitar el Caché mortal de Vercel en la página de Perfil
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return { title: user.username, description: `Perfil de ${user.username} en CrossPixel` };
 }
 
-import ProfileActions from '@/components/profile/ProfileActions';
+
 
 export default async function MemberProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
