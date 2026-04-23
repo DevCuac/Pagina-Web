@@ -28,6 +28,8 @@
   --text-primary: #ffffff;
   --text-secondary: #888888;
   --text-muted: #555555;
+  --text-link: #58a6ff;
+  --text-inverse: #0d1117;
 
   /* Brand Colors */
   --accent-blue: #0070ff;
@@ -45,9 +47,8 @@
 .btn-glow:hover {
   box-shadow: 0 0 25px var(--accent-blue-glow);
 }
-  --text-link: #58a6ff;
-  --text-inverse: #0d1117;
 
+:root {
   /* Accent colors */
   --accent-primary: #4f7df9;
   --accent-primary-hover: #6690ff;
