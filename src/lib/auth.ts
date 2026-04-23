@@ -22,18 +22,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         try {
-          if (!credentials?.email || !credentials?.password) return null;
+          if (!credentials?.email || !credentials?.password) {
+            console.log('AUTH_DEBUG: Missing credentials');
+            return null;
+          }
 
           const user = await (prisma.user as any).findUnique({
             where: { email: credentials.email as string },
             include: { role: true },
           });
 
-          if (!user || !user.passwordHash) return null;
+          if (!user) {
+            console.log('AUTH_DEBUG: User not found:', credentials.email);
+            return null;
+          }
+          
+          if (!user.passwordHash) {
+            console.log('AUTH_DEBUG: User has no passwordHash (OAuth user?):', credentials.email);
+            return null;
+          }
 
           const isValid = compareSync(credentials.password as string, user.passwordHash);
-          if (!isValid) return null;
+          if (!isValid) {
+            console.log('AUTH_DEBUG: Invalid password for:', credentials.email);
+            return null;
+          }
 
+          console.log('AUTH_DEBUG: Login successful for:', user.username, 'Role:', user.role?.name);
           // Allow login even if unverified, we will restrict actions later
           return {
             id: user.id,
