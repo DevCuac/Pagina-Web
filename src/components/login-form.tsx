@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -117,12 +118,12 @@ export function LoginForm({
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password" title="Password" className="text-zinc-300">{t('auth.password')}</Label>
-                  <a
-                    href="#"
+                  <Link
+                    href="/forgot-password"
                     className="ml-auto text-xs text-blue-500 hover:underline underline-offset-4"
                   >
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
                 <Input 
                   id="password" 
@@ -148,9 +149,9 @@ export function LoginForm({
 
             <div className="text-center text-sm text-zinc-400">
               {t('auth.no_account')}{" "}
-              <a href="/register" className="text-blue-500 hover:underline underline-offset-4">
+              <Link href="/register" className="text-blue-500 hover:underline underline-offset-4">
                 {t('auth.register_btn')}
-              </a>
+              </Link>
             </div>
           </div>
         </CardContent>

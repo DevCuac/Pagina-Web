@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -105,9 +106,11 @@ export function RegisterForm({
           <br />
           {t('auth.check_mail_hint')}
         </CardDescription>
-        <Button asChild className="w-full bg-zinc-900 border-zinc-800 hover:bg-zinc-800">
-           <a href="/login">{t('auth.go_login')}</a>
-        </Button>
+        <Link href="/login" className="w-full block">
+          <Button className="w-full bg-zinc-900 border-zinc-800 hover:bg-zinc-800">
+            {t('auth.go_login')}
+          </Button>
+        </Link>
       </Card>
     );
   }
