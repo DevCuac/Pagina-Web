@@ -16,6 +16,11 @@ export async function PATCH(request: NextRequest) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
 
+  // Block updates if not verified (except for admins)
+  if (!session.user.emailVerified && !session.user.isAdmin) {
+    return NextResponse.json({ error: 'Email verification required' }, { status: 403 });
+  }
+
   const body = await request.json();
   const updateData: any = {};
 

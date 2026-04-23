@@ -7,6 +7,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
 
+  // Block creation if not verified (except for admins)
+  if (!session.user.emailVerified && !session.user.isAdmin) {
+    return NextResponse.json({ error: 'Email verification required' }, { status: 403 });
+  }
+
   const { slug } = await params;
   const forum = await prisma.forum.findUnique({ where: { slug } });
   if (!forum) return NextResponse.json({ error: 'Foro no encontrado' }, { status: 404 });

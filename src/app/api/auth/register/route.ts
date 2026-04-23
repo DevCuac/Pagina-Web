@@ -59,7 +59,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Los registros están cerrados temporalmente' }, { status: 403 });
     }
 
-    const verificationRequired = process.env.EMAIL_VERIFICATION_REQUIRED === 'true' || config['email_verification_enabled'] === 'true';
+    // Always initiate verification, but we won't block login anymore
+    const verificationRequired = true;
 
     const user = await prisma.user.create({
       data: {

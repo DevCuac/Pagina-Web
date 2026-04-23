@@ -57,9 +57,22 @@ export default function Navbar() {
 
   return (
     <>
-      {session && session.user && (session.user as any).emailVerified === null && (
-        <div style={{ background: 'var(--accent-warning)', color: '#000', textAlign: 'center', padding: '0.75rem', fontSize: '0.9rem', fontWeight: 600, display: 'flex', justifyContent: 'center', gap: '8px' }}>
-          {t('navbar.unverified_warning')}
+      {session && session.user && !(session.user as any).emailVerified && (
+        <div className="bg-amber-500/10 border-b border-amber-500/20 py-2.5 px-4 flex items-center justify-center gap-3 animate-in fade-in slide-in-from-top duration-500">
+           <span className="text-amber-500 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+             <span className="size-1.5 rounded-full bg-amber-500 animate-pulse" />
+             {t('navbar.unverified_warning')}
+           </span>
+           <button 
+             onClick={async () => {
+               const res = await fetch('/api/user/resend-verification', { method: 'POST' });
+               if (res.ok) alert('Correo enviado!');
+               else alert('Error al enviar');
+             }}
+             className="px-3 py-1 rounded-full bg-amber-500 text-black text-[10px] font-black uppercase tracking-tighter hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
+           >
+             Resend Email
+           </button>
         </div>
       )}
       <nav className={styles.navbar}>

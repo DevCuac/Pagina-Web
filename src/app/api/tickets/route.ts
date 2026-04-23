@@ -22,6 +22,11 @@ export async function POST(request: NextRequest) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
 
+  // Block creation if not verified (except for admins)
+  if (!session.user.emailVerified && !session.user.isAdmin) {
+    return NextResponse.json({ error: 'Email verification required' }, { status: 403 });
+  }
+
   const body = await request.json();
   const parsed = ticketSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: (parsed.error as any).issues[0].message }, { status: 400 });
