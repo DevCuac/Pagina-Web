@@ -11,7 +11,7 @@ export default function ProfileEditPage() {
   const router = useRouter();
   const [form, setForm] = useState({ bio: '', minecraftName: '', avatar: '', banner: '' });
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetch('/api/user/profile', { cache: 'no-store' }).then(r => r.json()).then(data => {
@@ -28,6 +28,7 @@ export default function ProfileEditPage() {
     e.preventDefault();
     setLoading(true);
     setSuccess('');
+    setError('');
 
     const res = await fetch('/api/user/profile', {
       method: 'PATCH',
@@ -35,13 +36,16 @@ export default function ProfileEditPage() {
       body: JSON.stringify(form),
     });
 
+    const data = await res.json();
+
     if (res.ok) {
       setSuccess(t('profileEdit.success'));
+      // This triggers a refresh of the session data from the server/DB
       await update();
-      setTimeout(() => {
-        router.refresh();
-        setSuccess('');
-      }, 2000);
+      setTimeout(() => setSuccess(''), 3000);
+    } else {
+      setError(data.error || 'Error saving profile');
+      setTimeout(() => setError(''), 3000);
     }
     setLoading(false);
   };
@@ -52,8 +56,14 @@ export default function ProfileEditPage() {
         <h1 style={{ marginBottom: 'var(--space-lg)' }}>{t('profileEdit.title')}</h1>
 
         {success && (
-          <div style={{ padding: '0.75rem 1rem', background: 'var(--accent-success-bg)', border: '1px solid rgba(63,185,80,0.3)', borderRadius: 'var(--radius-md)', color: 'var(--accent-success)', fontSize: '0.875rem', marginBottom: 'var(--space-lg)' }}>
+          <div style={{ padding: '0.75rem 1rem', background: 'rgba(63,185,80,0.1)', border: '1px solid rgba(63,185,80,0.3)', borderRadius: 'var(--radius-md)', color: 'var(--accent-success)', fontSize: '0.875rem', marginBottom: 'var(--space-lg)' }}>
             {success}
+          </div>
+        )}
+
+        {error && (
+          <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,81,73,0.1)', border: '1px solid rgba(248,81,73,0.3)', borderRadius: 'var(--radius-md)', color: 'var(--accent-danger)', fontSize: '0.875rem', marginBottom: 'var(--space-lg)' }}>
+            {error}
           </div>
         )}
 
