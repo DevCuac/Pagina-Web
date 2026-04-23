@@ -26,6 +26,16 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [currentAvatar, setCurrentAvatar] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (session) {
+      fetch('/api/user/profile', { cache: 'no-store' })
+        .then(res => res.json())
+        .then(data => setCurrentAvatar(data.avatar))
+        .catch(() => {});
+    }
+  }, [session]);
 
   useEffect(() => {
     const handleCountUpdate = (e: any) => setUnreadCount(e.detail);
@@ -123,8 +133,8 @@ export default function Navbar() {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                 >
                   <div className={styles.userAvatar}>
-                    {session.user.avatar || session.user.image ? (
-                      <img src={session.user.avatar || session.user.image || ''} alt="" />
+                    {currentAvatar || session.user.image ? (
+                      <img src={currentAvatar || session.user.image || ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                     ) : (
                       <span>{session.user.username?.[0] || 'U'}</span>
                     )}

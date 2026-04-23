@@ -54,14 +54,20 @@
   },
   "profileEdit": {
     "title": "Profil bearbeiten",
+    "subtitle": "Passe deine Identität im gesamten Netzwerk an",
     "success": "Profil erfolgreich aktualisiert",
     "err_cannot_change_username": "Der Benutzername kann nicht geändert werden",
-    "avatar_url": "Avatar-URL",
-    "banner_url": "Banner-URL",
-    "bio": "Biografie",
+    "media_title": "Profilerscheinung",
+    "avatar_label": "Profilbild",
+    "banner_label": "Profilbanner",
+    "info_title": "Benutzerinformationen",
+    "bio_label": "Biografie",
     "bio_placeholder": "Erzähl uns etwas über dich...",
-    "save": "Änderungen speichern",
+    "save_changes": "Änderungen speichern",
     "saving": "Speichern..."
+  },
+  "common": {
+    "back": "Zurückgehen"
   },
   "members": {
     "title": "Community-Mitglieder",

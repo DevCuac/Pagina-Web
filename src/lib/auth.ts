@@ -102,8 +102,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.roleColor = token.roleColor as string;
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.isStaff = token.isStaff as boolean;
-        session.user.avatar = token.avatar as string | null;
-        session.user.banner = token.banner as string | null;
+        // Don't store large base64 strings in the session cookie to avoid size limits
+        session.user.avatar = null; 
+        session.user.banner = null;
         session.user.emailVerified = token.emailVerified as Date | null;
         session.user.rolePermissions = token.rolePermissions as string;
       }

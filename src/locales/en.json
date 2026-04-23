@@ -54,14 +54,20 @@
   },
   "profileEdit": {
     "title": "Edit Profile",
+    "subtitle": "Customize your identity across the network",
     "success": "Profile successfully updated",
     "err_cannot_change_username": "Username cannot be changed",
-    "avatar_url": "Avatar URL",
-    "banner_url": "Banner URL",
-    "bio": "Biography",
+    "media_title": "Profile Appearance",
+    "avatar_label": "Profile Picture",
+    "banner_label": "Profile Banner",
+    "info_title": "User Information",
+    "bio_label": "Biography",
     "bio_placeholder": "Tell us about yourself...",
-    "save": "Save Changes",
+    "save_changes": "Save Changes",
     "saving": "Saving..."
+  },
+  "common": {
+    "back": "Go Back"
   },
   "members": {
     "title": "Community Members",
