@@ -10,7 +10,7 @@ export default function RegisterPage() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600 blur-[120px]" />
       </div>
 
-      <div className="flex w-full max-w-sm flex-col gap-6 relative z-10">
+      <div className="flex w-full max-w-md flex-col gap-6 relative z-10">
         <Link href="/" className="flex items-center gap-2 self-center font-bold text-white group">
           <div className="flex size-8 items-center justify-center rounded-md bg-blue-600 text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
             <span className="text-sm font-black italic">CP</span>
