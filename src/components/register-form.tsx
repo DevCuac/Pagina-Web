@@ -55,10 +55,10 @@ export function RegisterForm({
     <div className={cn("flex flex-col gap-8", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl md:text-4xl font-display font-black tracking-tighter text-white uppercase leading-tight drop-shadow-2xl">
-          {t('auth.register_title_premium')}
+          {t('auth.register_title_premium') || 'CREA TU CUENTA DE CROSSPIXEL'}
         </h1>
         <p className="text-[10px] md:text-xs text-zinc-500 font-bold uppercase tracking-[0.3em]">
-          {t('auth.register_desc_premium')}
+          {t('auth.register_desc_premium') || 'ÚNETE A NUESTRA COMUNIDAD'}
         </p>
       </div>
 
@@ -66,7 +66,7 @@ export function RegisterForm({
         <FieldGroup>
           <div className="grid gap-2">
             <Label htmlFor="username" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-              {t('auth.username_label')}
+              {t('auth.username_label') || 'NOMBRE DE USUARIO'}
             </Label>
             <Input
               id="username"
@@ -80,7 +80,7 @@ export function RegisterForm({
 
           <div className="grid gap-2">
             <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-              {t('auth.email_label')}
+              {t('auth.email_label') || 'CORREO ELECTRÓNICO'}
             </Label>
             <Input
               id="email"
@@ -96,10 +96,10 @@ export function RegisterForm({
           <div className="grid gap-2">
             <div className="flex flex-col gap-0.5">
               <Label htmlFor="minecraft" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-                {t('auth.minecraft_label')}
+                {t('auth.minecraft_label') || 'NOMBRE DE MINECRAFT (OPCIONAL)'}
               </Label>
               <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest ml-1 mb-1">
-                {t('auth.minecraft_hint')}
+                {t('auth.minecraft_hint') || 'TU NOMBRE DE USUARIO EN MINECRAFT JAVA EDITION'}
               </span>
             </div>
             <Input
@@ -113,7 +113,7 @@ export function RegisterForm({
 
           <div className="grid gap-2">
             <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-              {t('auth.password_label')}
+              {t('auth.password_label') || 'CONTRASEÑA'}
             </Label>
             <div className="relative">
               <Input
@@ -145,14 +145,14 @@ export function RegisterForm({
             className="w-full h-14 rounded-2xl bg-electric hover:bg-electric/90 text-white font-black uppercase tracking-widest btn-glow transition-all disabled:opacity-50 mt-2 shadow-xl shadow-electric/20"
             disabled={loading}
           >
-            {loading ? t('auth.loading') : t('auth.register_btn')}
+            {loading ? (t('auth.loading') || 'CARGANDO...') : (t('auth.register_btn') || 'CREAR CUENTA')}
           </Button>
         </FieldGroup>
 
         <div className="text-center text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-widest">
-          {t('auth.already_account')} {" "}
+          {t('auth.already_account') || '¿YA TIENES CUENTA?'} {" "}
           <Link href="/login" className="text-electric hover:underline font-black">
-            {t('auth.login_now')}
+            {t('auth.login_now') || 'INICIA SESIÓN'}
           </Link>
         </div>
       </form>
