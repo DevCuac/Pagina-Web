@@ -14,6 +14,7 @@
     "unverified_warning": "⚠️ Dein Konto ist nicht verifiziert. Bitte prüf deinen Posteingang oder Spam-Ordner."
   },
   "auth": {
+    "loading": "Anmelden...",
     "or_continue_with": "oder fahre fort mit",
     "login_title": "Willkommen zurück",
     "login_desc": "Melde dich an, um fortzufahren",

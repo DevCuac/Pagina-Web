@@ -14,6 +14,7 @@
     "unverified_warning": "⚠️ Tu cuenta no está verificada. Por favor, revisa tu bandeja de entrada o spam."
   },
   "auth": {
+    "loading": "Cargando...",
     "or_continue_with": "o continuar con",
     "login_title": "Bienvenido de nuevo",
     "login_desc": "Inicia sesión para continuar",
