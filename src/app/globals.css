@@ -13,21 +13,38 @@
 
 :root {
   /* Background palette */
-  --bg-base: #0d1117;
-  --bg-surface: #161b22;
-  --bg-elevated: #1c2333;
-  --bg-overlay: #21283b;
-  --bg-input: #0d1117;
+  --bg-base: #050505;
+  --bg-surface: #0a0a0a;
+  --bg-elevated: #111111;
+  --bg-overlay: rgba(10, 10, 10, 0.8);
+  --bg-input: #0a0a0a;
 
   /* Border */
-  --border-default: #30363d;
-  --border-muted: #21262d;
-  --border-accent: #4f7df9;
+  --border-default: #1a1a1a;
+  --border-muted: #111111;
+  --border-accent: #0070ff;
 
   /* Text */
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --text-muted: #6e7681;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --text-muted: #555555;
+
+  /* Brand Colors */
+  --accent-blue: #0070ff;
+  --accent-blue-glow: rgba(0, 112, 255, 0.3);
+}
+
+@theme {
+  --color-electric: var(--accent-blue);
+  --color-electric-glow: var(--accent-blue-glow);
+}
+
+.btn-glow {
+  box-shadow: 0 0 15px var(--accent-blue-glow);
+}
+.btn-glow:hover {
+  box-shadow: 0 0 25px var(--accent-blue-glow);
+}
   --text-link: #58a6ff;
   --text-inverse: #0d1117;
 
