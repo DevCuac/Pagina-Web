@@ -194,11 +194,33 @@ export default function GeneralSettingsPage() {
             </label>
           </div>
 
+        {/* Personalización Visual */}
+        <div className="card">
+          <h3 className="card-title" style={{ marginBottom: 'var(--space-md)' }}>Personalización Visual</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+            Personaliza el aspecto de las páginas de acceso (Login y Registro).
+          </p>
+
+          <div className="form-group">
+            <label className="form-label">URL del Fondo (Imagen o GIF)</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              value={settings['auth_background_url'] || ''} 
+              onChange={e => handleChange('auth_background_url', e.target.value)} 
+              placeholder="Ej: https://tudominio.com/fondo.gif o /img/bg.jpg" 
+            />
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>
+              Este fondo se aplicará a la columna derecha de las páginas de Login y Registro.
+            </span>
+          </div>
+
           <div style={{ marginTop: 'var(--space-2xl)' }}>
             <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem' }} disabled={saving}>
               {saving ? t('admin_settings.saving_btn') : t('admin_settings.save_btn')}
             </button>
           </div>
+        </div>
         </div>
 
       </form>

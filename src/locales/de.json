@@ -38,7 +38,10 @@
     "err_unverified": "Dein Konto ist nicht verifiziert. Bitte prüf deine E-Mails.",
     "err_credentials": "Falscher Benutzername oder falsches Passwort",
     "err_generic": "Ein Fehler ist aufgetreten",
-    "unknown_user": "Unbekannter Benutzer"
+    "unknown_user": "Unbekannter Benutzer",
+    "forgot_password": "Passwort vergessen?",
+    "already_account": "Hast du schon ein Konto?",
+    "or_continue_with": "oder weiter mit"
   },
   "dashboard": {
     "greeting": "Hallo, willkommen zurück!",

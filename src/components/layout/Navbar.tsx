@@ -5,6 +5,19 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useTranslation } from '@/components/I18nProvider';
+import { 
+  Languages, 
+  ChevronDown, 
+  User, 
+  LayoutDashboard, 
+  Settings, 
+  ShieldCheck, 
+  LogOut, 
+  Bell,
+  Search,
+  Menu,
+  X
+} from 'lucide-react';
 import NotificationPoller from '../NotificationPoller';
 import styles from './Navbar.module.css';
 
@@ -96,20 +109,32 @@ export default function Navbar() {
         </div>
 
         <div className={styles.actions}>
-          
           {/* Language Switcher */}
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <div className="relative group">
             <button 
               onClick={() => setLangMenuOpen(!langMenuOpen)}
-              style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', gap: '6px', alignItems: 'center', padding: '4px' }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900/50 border border-zinc-800/50 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all"
             >
-              <span style={{ fontSize: '1.2rem' }}>{locale === 'en' ? '🇬🇧' : '🇩🇪'}</span>
+              <Languages className="size-4" />
+              <span className="text-[10px] font-black uppercase tracking-tighter">{locale}</span>
+              <ChevronDown className={cn("size-3 transition-transform duration-300", langMenuOpen && "rotate-180")} />
             </button>
+            
             {langMenuOpen && (
-              <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem', background: 'var(--bg-elevated)', border: '1px solid var(--border-muted)', borderRadius: 'var(--radius-md)', padding: '0.5rem', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                <button onClick={() => changeLocale('de')} style={{ display: 'flex', gap: '8px', padding: '0.5rem 1rem', background: locale === 'de' ? 'var(--bg-surface)' : 'transparent', border: 'none', color: 'var(--text-primary)', textAlign: 'left', cursor: 'pointer', borderRadius: '4px' }}>🇩🇪 Deutsch</button>
-                <button onClick={() => changeLocale('en')} style={{ display: 'flex', gap: '8px', padding: '0.5rem 1rem', background: locale === 'en' ? 'var(--bg-surface)' : 'transparent', border: 'none', color: 'var(--text-primary)', textAlign: 'left', cursor: 'pointer', borderRadius: '4px' }}>🇬🇧 English</button>
-              </div>
+              <>
+                <div className="fixed inset-0 z-[90]" onClick={() => setLangMenuOpen(false)} />
+                <div className="absolute top-full right-0 mt-2 w-40 p-1.5 bg-zinc-950/90 backdrop-blur-xl border border-zinc-800 rounded-xl shadow-2xl z-[100] animate-in fade-in zoom-in duration-200">
+                  <button onClick={() => changeLocale('es')} className={cn("flex items-center w-full gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-colors", locale === 'es' ? "bg-blue-600 text-white" : "text-zinc-400 hover:bg-zinc-900 hover:text-white")}>
+                    <span className="text-base">🇪🇸</span> Español
+                  </button>
+                  <button onClick={() => changeLocale('en')} className={cn("flex items-center w-full gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-colors", locale === 'en' ? "bg-blue-600 text-white" : "text-zinc-400 hover:bg-zinc-900 hover:text-white")}>
+                    <span className="text-base">🇬🇧</span> English
+                  </button>
+                  <button onClick={() => changeLocale('de')} className={cn("flex items-center w-full gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-colors", locale === 'de' ? "bg-blue-600 text-white" : "text-zinc-400 hover:bg-zinc-900 hover:text-white")}>
+                    <span className="text-base">🇩🇪</span> Deutsch
+                  </button>
+                </div>
+              </>
             )}
           </div>
           {isLoading ? (

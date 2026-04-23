@@ -88,7 +88,7 @@ export function RegisterForm({
       <form onSubmit={handleSubmit}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-1 text-center mb-4">
-            <h1 className="text-3xl font-black tracking-tighter text-white uppercase">{t('auth.register_title')}</h1>
+            <h1 className="text-3xl font-display font-black tracking-tighter text-white uppercase">{t('auth.register_title')}</h1>
             <p className="text-sm text-balance text-zinc-500 font-medium uppercase tracking-widest">
               {t('auth.register_desc')}
             </p>
