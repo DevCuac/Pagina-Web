@@ -18,13 +18,14 @@ export async function POST(request: NextRequest) {
   try {
     const token = crypto.randomBytes(32).toString('hex');
     
-    await prisma.verificationToken.upsert({
-      where: { identifier: user.email },
-      update: {
-        token,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-      },
-      create: {
+    // Delete old tokens for this email first
+    await (prisma.verificationToken as any).deleteMany({
+      where: { identifier: user.email }
+    });
+
+    // Create new token
+    await (prisma.verificationToken as any).create({
+      data: {
         identifier: user.email,
         token,
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
