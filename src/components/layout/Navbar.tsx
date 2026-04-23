@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import NotificationPoller from '../NotificationPoller';
 import styles from './Navbar.module.css';
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: '/', tKey: 'navbar.home' },
