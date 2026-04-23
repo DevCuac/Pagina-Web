@@ -11,6 +11,7 @@ export default function ProfileEditPage() {
   const router = useRouter();
   const [form, setForm] = useState({ bio: '', minecraftName: '', avatar: '', banner: '' });
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
