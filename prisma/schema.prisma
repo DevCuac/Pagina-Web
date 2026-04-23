@@ -17,8 +17,8 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   passwordHash  String?
-  avatar        String?
-  banner        String?
+  avatar        String?   @db.LongText
+  banner        String?   @db.LongText
   bio           String?
   minecraftUuid String?   @unique
   minecraftName String?

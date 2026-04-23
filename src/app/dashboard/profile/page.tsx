@@ -25,28 +25,46 @@ export default function ProfileEditPage() {
     });
   }, []);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'avatar' | 'banner') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) { // 2MB limit
+      setError('File is too large (max 2MB)');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm(prev => ({ ...prev, [field]: reader.result as string }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setSuccess('');
     setError('');
 
-    const res = await fetch('/api/user/profile', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      setSuccess(t('profileEdit.success'));
-      // This triggers a refresh of the session data from the server/DB
-      await update();
-      setTimeout(() => setSuccess(''), 3000);
-    } else {
-      setError(data.error || 'Error saving profile');
-      setTimeout(() => setError(''), 3000);
+      if (res.ok) {
+        setSuccess(t('profileEdit.success'));
+        await update();
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        setError(data.error || 'Error saving profile');
+      }
+    } catch (err) {
+      setError('Network error');
     }
     setLoading(false);
   };
@@ -72,40 +90,39 @@ export default function ProfileEditPage() {
           <div className="form-group">
             <label className="form-label">{t('auth.username')}</label>
             <input className="form-input" value={session?.user?.username || ''} disabled />
-            <p className="form-hint">{t('profileEdit.err_cannot_change_username')}</p>
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Email</label>
-            <input className="form-input" value={session?.user?.email || ''} disabled />
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">{t('profileEdit.avatar_url')}</label>
-              <input type="url" className="form-input" value={form.avatar} onChange={e => setForm({ ...form, avatar: e.target.value })} placeholder="https://i.imgur.com/foto.png" />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            <div className="form-group">
+              <label className="form-label">{t('profileEdit.avatar') || 'Avatar'}</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {form.avatar && <img src={form.avatar} alt="Preview" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--border-color)' }} />}
+                <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'avatar')} style={{ fontSize: '0.8rem' }} />
+              </div>
             </div>
 
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">{t('profileEdit.banner_url')}</label>
-              <input type="url" className="form-input" value={form.banner} onChange={e => setForm({ ...form, banner: e.target.value })} placeholder="https://i.imgur.com/fondo.jpg" />
+            <div className="form-group">
+              <label className="form-label">{t('profileEdit.banner') || 'Banner'}</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {form.banner && <img src={form.banner} alt="Preview" style={{ width: '100%', height: '50px', borderRadius: '4px', objectFit: 'cover', border: '2px solid var(--border-color)' }} />}
+                <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'banner')} style={{ fontSize: '0.8rem' }} />
+              </div>
             </div>
           </div>
 
           <div className="form-group">
             <label className="form-label">{t('profileEdit.bio')}</label>
-            <textarea className="form-textarea" value={form.bio} onChange={e => setForm({ ...form, bio: e.target.value })} placeholder={t('profileEdit.bio_placeholder')} rows={4} maxLength={500} />
+            <textarea className="form-textarea" value={form.bio} onChange={e => setForm({ ...form, bio: e.target.value })} rows={4} maxLength={500} />
             <p className="form-hint">{form.bio.length}/500</p>
           </div>
 
           <div className="form-group">
             <label className="form-label">{t('auth.minecraft_name')}</label>
             <input className="form-input" value={form.minecraftName} onChange={e => setForm({ ...form, minecraftName: e.target.value })} placeholder="Steve" maxLength={16} />
-            <p className="form-hint">{t('auth.minecraft_hint')}</p>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            <button type="submit" className="btn btn-primary" disabled={loading} style={{ minWidth: '120px' }}>
               {loading ? t('profileEdit.saving') : t('profileEdit.save')}
             </button>
           </div>
