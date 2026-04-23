@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
 import ProfileActions from '@/components/profile/ProfileActions';
+import { AnalyticsDashboard } from '@/components/dashboard/AnalyticsDashboard';
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -26,85 +27,118 @@ export default async function DashboardPage() {
   const t = (key: string) => getTranslation(dict, key);
 
   const finalBanner = dbUser?.banner || session.user.banner;
+  const isStaff = session.user.isAdmin || session.user.isStaff;
 
   return (
-    <div className="page-content" style={{ background: 'var(--bg-main)', minHeight: '100vh', paddingBottom: '60px' }}>
-      <div className="container" style={{ maxWidth: '900px' }}>
+    <div className="page-content bg-zinc-950 min-h-screen pb-20">
+      <div className="container max-w-5xl">
         
         {/* Banner Area */}
-        <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 'var(--space-xl)', position: 'relative' }}>
-          <div style={{
-            height: '160px',
-            background: finalBanner
-              ? `url(${finalBanner}) center/cover`
-              : `linear-gradient(135deg, ${session.user.roleColor}33, var(--bg-elevated))`,
-          }} />
+        <div className="rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 shadow-2xl mb-8 relative">
+          <div className="h-40 relative">
+             <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent z-10" />
+             <div 
+               className="h-full w-full"
+               style={{
+                background: finalBanner
+                  ? `url(${finalBanner}) center/cover`
+                  : `linear-gradient(135deg, ${session.user.roleColor}33, #18181b)`,
+               }} 
+             />
+          </div>
 
-          <div style={{ position: 'absolute', top: '15px', right: '15px', display: 'flex', gap: '10px' }}>
+          <div className="absolute top-4 right-4 z-20 flex gap-2">
             <ProfileActions userId={session.user.id} />
           </div>
 
-          <div style={{ padding: 'var(--space-lg)', display: 'flex', gap: 'var(--space-lg)', alignItems: 'flex-end', marginTop: '-60px' }}>
-            <div className="avatar-placeholder avatar-2xl" style={{
-              width: 110, height: 110, fontSize: '2.5rem',
-              borderColor: session.user.roleColor, borderWidth: '4px',
-              background: 'var(--bg-surface)', flexShrink: 0, overflow: 'hidden',
-              boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
-            }}>
+          <div className="px-8 pb-8 flex flex-col md:flex-row gap-6 items-end -mt-12 relative z-20">
+            <div className="size-28 rounded-2xl border-4 bg-zinc-900 flex-shrink-0 overflow-hidden shadow-2xl"
+                 style={{ borderColor: session.user.roleColor }}>
               {(dbUser?.avatar || session.user.avatar || session.user.image) ? (
-                <img src={dbUser?.avatar || session.user.avatar || session.user.image || ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : session.user.username[0]}
-            </div>
-            <div style={{ flex: 1, paddingBottom: 'var(--space-sm)' }}>
-              <h1 style={{ fontSize: '1.8rem', color: session.user.roleColor, fontWeight: 800 }}>{t('dashboard.greeting').split(',')[0]}, {session.user.username}!</h1>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                   {dbUser?.instagram && <span title="Instagram">📸</span>}
-                   {dbUser?.twitter && <span title="Twitter">🐦</span>}
-                   {dbUser?.discord && <span title="Discord">💬</span>}
+                <img src={dbUser?.avatar || session.user.avatar || session.user.image || ''} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-zinc-500">
+                  {session.user.username[0]}
                 </div>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('dashboard.greeting').split(', ')[1] || 'Welcome back'}</p>
+              )}
+            </div>
+            <div className="flex-1 pb-2">
+              <h1 className="text-3xl font-extrabold tracking-tight" style={{ color: session.user.roleColor }}>
+                {t('dashboard.greeting').split(',')[0]}, {session.user.username}!
+              </h1>
+              <div className="flex items-center gap-4 mt-2">
+                <div className="flex gap-2">
+                   {dbUser?.instagram && <span title="Instagram" className="text-xl">📸</span>}
+                   {dbUser?.twitter && <span title="Twitter" className="text-xl">🐦</span>}
+                   {dbUser?.discord && <span title="Discord" className="text-xl">💬</span>}
+                </div>
+                <p className="text-zinc-400 text-sm font-medium">{t('dashboard.greeting').split(', ')[1] || 'Welcome back'}</p>
               </div>
             </div>
           </div>
           {dbUser?.bio && (
-            <div style={{ padding: '0 var(--space-lg) var(--space-lg)', color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>
+            <div className="px-8 pb-8 text-zinc-300 text-sm max-w-2xl leading-relaxed">
               {dbUser.bio}
             </div>
           )}
         </div>
 
-        <div className="grid grid-3" style={{ marginBottom: 'var(--space-xl)' }}>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{postCount}</div>
-            <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>{t('dashboard.posts')}</div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 text-center hover:bg-zinc-900 transition-colors">
+            <div className="text-3xl font-black text-white">{postCount}</div>
+            <div className="text-xs font-bold uppercase tracking-widest text-zinc-500 mt-1">{t('dashboard.posts')}</div>
           </div>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{ticketCount}</div>
-            <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>{t('dashboard.tickets')}</div>
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 text-center hover:bg-zinc-900 transition-colors">
+            <div className="text-3xl font-black text-white">{ticketCount}</div>
+            <div className="text-xs font-bold uppercase tracking-widest text-zinc-500 mt-1">{t('dashboard.tickets')}</div>
           </div>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: unreadNotifs > 0 ? 'var(--accent-warning)' : 'var(--text-primary)' }}>{unreadNotifs}</div>
-            <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>{t('dashboard.notifications')}</div>
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 text-center hover:bg-zinc-900 transition-colors">
+            <div className="text-3xl font-black" style={{ color: unreadNotifs > 0 ? '#f59e0b' : 'white' }}>{unreadNotifs}</div>
+            <div className="text-xs font-bold uppercase tracking-widest text-zinc-500 mt-1">{t('dashboard.notifications')}</div>
           </div>
         </div>
 
-        <div className="grid grid-2">
-          <Link href="/dashboard/profile" className="card" style={{ textDecoration: 'none' }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: 'var(--space-sm)' }}>👤 {t('dashboard.edit_profile')}</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{t('dashboard.edit_profile_desc')}</p>
+        {/* Analytics Section for Staff */}
+        {isStaff && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
+              Platform Insights
+            </h2>
+            <AnalyticsDashboard />
+          </div>
+        )}
+
+        {/* Quick Links Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link href="/dashboard/profile" className="group bg-zinc-900/40 border border-zinc-800 p-6 rounded-xl hover:bg-blue-600/10 hover:border-blue-500/50 transition-all">
+            <h3 className="text-white font-bold mb-2 flex items-center gap-2">
+               <span className="text-blue-500 group-hover:scale-110 transition-transform text-lg">👤</span>
+               {t('dashboard.edit_profile')}
+            </h3>
+            <p className="text-zinc-400 text-sm">{t('dashboard.edit_profile_desc')}</p>
           </Link>
-          <Link href="/notifications" className="card" style={{ textDecoration: 'none' }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: 'var(--space-sm)' }}>🔔 {t('dashboard.notifications')}</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}></p>
+          <Link href="/notifications" className="group bg-zinc-900/40 border border-zinc-800 p-6 rounded-xl hover:bg-amber-600/10 hover:border-amber-500/50 transition-all">
+            <h3 className="text-white font-bold mb-2 flex items-center gap-2">
+               <span className="text-amber-500 group-hover:scale-110 transition-transform text-lg">🔔</span>
+               {t('dashboard.notifications')}
+            </h3>
+            <p className="text-zinc-400 text-sm">Review your latest activity and alerts.</p>
           </Link>
-          <Link href="/support" className="card" style={{ textDecoration: 'none' }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: 'var(--space-sm)' }}>🎫 {t('dashboard.my_tickets')}</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{t('dashboard.my_tickets_desc')}</p>
+          <Link href="/support" className="group bg-zinc-900/40 border border-zinc-800 p-6 rounded-xl hover:bg-emerald-600/10 hover:border-emerald-500/50 transition-all">
+            <h3 className="text-white font-bold mb-2 flex items-center gap-2">
+               <span className="text-emerald-500 group-hover:scale-110 transition-transform text-lg">🎫</span>
+               {t('dashboard.my_tickets')}
+            </h3>
+            <p className="text-zinc-400 text-sm">{t('dashboard.my_tickets_desc')}</p>
           </Link>
-          <Link href="/forums" className="card" style={{ textDecoration: 'none' }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: 'var(--space-sm)' }}>💬 {t('dashboard.forums')}</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{t('dashboard.forums_desc')}</p>
+          <Link href="/forums" className="group bg-zinc-900/40 border border-zinc-800 p-6 rounded-xl hover:bg-indigo-600/10 hover:border-indigo-500/50 transition-all">
+            <h3 className="text-white font-bold mb-2 flex items-center gap-2">
+               <span className="text-indigo-500 group-hover:scale-110 transition-transform text-lg">💬</span>
+               {t('dashboard.forums')}
+            </h3>
+            <p className="text-zinc-400 text-sm">{t('dashboard.forums_desc')}</p>
           </Link>
         </div>
       </div>

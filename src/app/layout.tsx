@@ -34,6 +34,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 import { ToastProvider } from '@/components/providers/ToastProvider';
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 export default async function RootLayout({
   children,
@@ -43,7 +48,7 @@ export default async function RootLayout({
   const { locale, dict } = await getLocaleObj();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={cn("dark font-sans", geist.variable)}>
       <body>
         <I18nProvider locale={locale} dict={dict}>
           <ToastProvider>

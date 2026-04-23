@@ -21,7 +21,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { t, locale } = useTranslation();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const isLoading = status === 'loading';
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
@@ -98,7 +99,11 @@ export default function Navbar() {
               </div>
             )}
           </div>
-          {session ? (
+          {isLoading ? (
+            <div style={{ width: '100px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="size-4 rounded-full border-2 border-zinc-500 border-t-transparent animate-spin" />
+            </div>
+          ) : session ? (
             <div className={styles.userArea}>
               <NotificationPoller />
               <Link href="/notifications" className={styles.notifBtn} title="Notificaciones" style={{ position: 'relative' }}>
