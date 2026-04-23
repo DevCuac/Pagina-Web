@@ -33,6 +33,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { ToastProvider } from '@/components/providers/ToastProvider';
+
 export default async function RootLayout({
   children,
 }: {
@@ -44,12 +46,13 @@ export default async function RootLayout({
     <html lang={locale}>
       <body>
         <I18nProvider locale={locale} dict={dict}>
-          <SessionProvider>
-            <Toaster position="top-right" toastOptions={{ style: { background: '#1c1c1e', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' } }} />
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </SessionProvider>
+          <ToastProvider>
+            <SessionProvider>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+            </SessionProvider>
+          </ToastProvider>
         </I18nProvider>
       </body>
     </html>

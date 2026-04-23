@@ -64,7 +64,13 @@
     "bio_label": "Biography",
     "bio_placeholder": "Tell us about yourself...",
     "save_changes": "Save Changes",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "security_title": "Account Security",
+    "current_password": "Current Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm New Password",
+    "update_password": "Update Password",
+    "pass_success": "Your password has been changed"
   },
   "common": {
     "back": "Go Back"
