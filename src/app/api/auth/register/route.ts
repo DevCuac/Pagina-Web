@@ -20,7 +20,6 @@ export async function POST(request: NextRequest) {
 
     const { username, email, password, minecraftName } = parsed.data;
 
-    // Check existing user
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [
@@ -37,7 +36,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Este nombre de usuario ya existe' }, { status: 400 });
     }
 
-    // Validate Minecraft user if provided
     let minecraftUuid: string | undefined;
     if (minecraftName) {
       const mcResult = await validateMinecraftUsername(minecraftName);
@@ -47,13 +45,11 @@ export async function POST(request: NextRequest) {
       minecraftUuid = mcResult.uuid;
     }
 
-    // Get default role
     const defaultRole = await prisma.role.findFirst({ where: { isDefault: true } });
     if (!defaultRole) {
       return NextResponse.json({ error: 'Error de configuración del servidor' }, { status: 500 });
     }
 
-    // Read site settings
     const settingMap = await prisma.siteSetting.findMany({
       where: { key: { in: ['email_verification_enabled', 'registration_enabled'] } }
     });
@@ -63,10 +59,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Los registros están cerrados temporalmente' }, { status: 403 });
     }
 
-    // Check if verification is required (Internal override via Env Var)
     const verificationRequired = process.env.EMAIL_VERIFICATION_REQUIRED === 'true' || config['email_verification_enabled'] === 'true';
 
-    // Create user
     const user = await prisma.user.create({
       data: {
         username,
@@ -75,7 +69,7 @@ export async function POST(request: NextRequest) {
         roleId: defaultRole.id,
         minecraftName: minecraftName || null,
         minecraftUuid: minecraftUuid || null,
-        emailVerified: verificationRequired ? null : new Date(), // Conditionally mark as verified
+        emailVerified: verificationRequired ? null : new Date(),
       },
     });
 
@@ -87,14 +81,14 @@ export async function POST(request: NextRequest) {
           data: {
             identifier: email,
             token,
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours expiry
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
           }
         });
 
         const userLocale = request.cookies.get('NEXT_LOCALE')?.value || 'de';
         await sendVerificationEmail(email, username, token, userLocale);
       } catch (err) {
-        console.error('Error al enviar email de verificación (Ignorando, requiere revisión SMTP):', err);
+        console.error('Email sending error:', err);
       }
     }
 
@@ -104,7 +98,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       error: 'Error interno del servidor', 
       details: error.message,
-      code: error.code // Prisma error code if any
+      code: error.code
     }, { status: 500 });
   }
 }

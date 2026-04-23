@@ -37,8 +37,11 @@ export default function ProfileEditPage() {
 
     if (res.ok) {
       setSuccess(t('profileEdit.success'));
-      await update({ forceRefresh: true }); // Envía un ping forzado al Provider
-      window.location.reload(); // Recarga destructiva para forzar la actualización de la Navbar si el componente no reacciona
+      await update();
+      setTimeout(() => {
+        router.refresh();
+        setSuccess('');
+      }, 2000);
     }
     setLoading(false);
   };

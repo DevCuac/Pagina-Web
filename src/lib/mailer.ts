@@ -1,11 +1,7 @@
 import nodemailer from 'nodemailer';
 import prisma from '@/lib/db';
 
-/**
- * Módulo dinámico para enviar correos usando la base de datos para no obligar el uso de .env
- */
 export async function getMailerTransport() {
-  // Prioridad: Variables de entorno (Más estable para producción)
   const envConfig = {
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -26,11 +22,10 @@ export async function getMailerTransport() {
           pass: envConfig.pass,
         }
       }),
-      from: envConfig.from || 'noreply@crosspixel.net'
+      from: envConfig.from || 'noreply@cross-pixel.de'
     };
   }
 
-  // Fallback: Base de datos (Configuración dinámica desde el dashboard)
   const settings = await prisma.siteSetting.findMany({
     where: {
       key: { in: ['smtp_host', 'smtp_port', 'smtp_secure', 'smtp_user', 'smtp_pass', 'smtp_from'] }
@@ -40,7 +35,7 @@ export async function getMailerTransport() {
   const config = settings.reduce((acc, obj) => ({ ...acc, [obj.key]: obj.value }), {} as Record<string, string>);
 
   if (!config.smtp_host || !config.smtp_user || !config.smtp_pass) {
-    throw new Error('SMTP no configurado ni en .env ni en el panel administrativo');
+    throw new Error('SMTP not configured');
   }
 
   return {
@@ -56,7 +51,7 @@ export async function getMailerTransport() {
           rejectUnauthorized: false
       }
     }),
-    from: config.smtp_from || 'noreply@crosspixel.net'
+    from: config.smtp_from || 'noreply@cross-pixel.de'
   };
 }
 

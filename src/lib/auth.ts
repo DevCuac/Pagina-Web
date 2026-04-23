@@ -33,8 +33,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const isValid = compareSync(credentials.password as string, user.passwordHash);
         if (!isValid) return null;
 
-        // Block login if unverified and internal verification is enforced
-        if (!user.emailVerified) {
+        // Block login if unverified and internal verification is enforced (Exempt Admins)
+        if (!user.emailVerified && !user.role.isAdmin) {
           const isVerificationRequired = process.env.EMAIL_VERIFICATION_REQUIRED === 'true';
           if (isVerificationRequired) {
              throw new Error('UnverifiedEmail');

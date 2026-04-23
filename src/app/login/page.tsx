@@ -33,8 +33,8 @@ export default function LoginPage() {
       setError(result.error);
       setLoading(false);
     } else {
-      router.push(callbackUrl);
-      router.refresh();
+      // Force hard redirect to ensure session is correctly picked up by all components
+      window.location.href = callbackUrl;
     }
   };
 
@@ -49,7 +49,7 @@ export default function LoginPage() {
           <p>{t('auth.login_desc')}</p>
         </div>
 
-        {error && <div className={styles.error}>{error}</div>}
+
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className="form-group">

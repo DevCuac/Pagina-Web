@@ -21,7 +21,6 @@ export default async function VerifyPage({
     );
   }
 
-  // Find verification token
   const vToken = await prisma.verificationToken.findFirst({
         where: { identifier: email, token }
   });
@@ -35,9 +34,7 @@ export default async function VerifyPage({
     );
   }
 
-  // Check expiration
   if (new Date() > new Date(vToken.expires)) {
-      // Delete expired token to keep DB clean
       await prisma.verificationToken.delete({ where: { identifier_token: { identifier: email, token } } });
       return (
          <div className="container" style={{ textAlign: 'center', padding: '100px 0' }}>
@@ -47,13 +44,11 @@ export default async function VerifyPage({
       );
   }
 
-  // Validate User Action
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
       return <div className="container">{t('verify.user_not_found')}</div>;
   }
 
-  // Execute Verification
   await prisma.user.update({
       where: { id: user.id },
       data: { emailVerified: new Date() }
