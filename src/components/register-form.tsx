@@ -85,7 +85,7 @@ export function RegisterForm({
             <Input
               id="email"
               type="email"
-              placeholder="m@ejemplo.com"
+              placeholder="example@mail.com"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -119,6 +119,7 @@ export function RegisterForm({
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
+                placeholder="********"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
