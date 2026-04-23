@@ -9,7 +9,7 @@ export default async function DashboardPage() {
   if (!session) redirect('/login');
 
   const [dbUser, postCount, ticketCount, unreadNotifs] = await Promise.all([
-    prisma.user.findUnique({ where: { id: session.user.id }, select: { bio: true, banner: true } }),
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { bio: true, banner: true, avatar: true } }),
     prisma.forumPost.count({ where: { authorId: session.user.id } }),
     prisma.ticket.count({ where: { authorId: session.user.id } }),
     prisma.notification.count({ where: { userId: session.user.id, isRead: false } }),
@@ -36,10 +36,10 @@ export default async function DashboardPage() {
             <div className="avatar-placeholder avatar-2xl" style={{
               width: 96, height: 96, fontSize: '2rem',
               borderColor: session.user.roleColor, borderWidth: '3px',
-              background: 'var(--bg-surface)', flexShrink: 0
+              background: 'var(--bg-surface)', flexShrink: 0, overflow: 'hidden'
             }}>
-              {session.user.avatar || session.user.image ? (
-                <img src={session.user.avatar || session.user.image || ''} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+              {(dbUser?.avatar || session.user.avatar || session.user.image) ? (
+                <img src={dbUser?.avatar || session.user.avatar || session.user.image || ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : session.user.username[0]}
             </div>
             <div style={{ flex: 1, paddingBottom: 'var(--space-sm)' }}>

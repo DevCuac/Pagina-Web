@@ -29,7 +29,7 @@ export default function ProfileEditPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) { // 2MB limit
+    if (file.size > 2 * 1024 * 1024) {
       setError('File is too large (max 2MB)');
       return;
     }
@@ -59,7 +59,7 @@ export default function ProfileEditPage() {
       if (res.ok) {
         setSuccess(t('profileEdit.success'));
         await update();
-        setTimeout(() => setSuccess(''), 3000);
+        setTimeout(() => setSuccess(''), 4000);
       } else {
         setError(data.error || 'Error saving profile');
       }
@@ -70,60 +70,105 @@ export default function ProfileEditPage() {
   };
 
   return (
-    <div className="page-content">
-      <div className="container" style={{ maxWidth: '600px' }}>
-        <h1 style={{ marginBottom: 'var(--space-lg)' }}>{t('profileEdit.title')}</h1>
+    <div className="page-content" style={{ background: 'var(--bg-main)', minHeight: '100vh', paddingBottom: '80px' }}>
+      <div className="container" style={{ maxWidth: '800px' }}>
+        <div style={{ marginBottom: '40px', textAlign: 'center' }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-1px', marginBottom: '10px' }}>{t('profileEdit.title')}</h1>
+          <p style={{ color: 'var(--text-muted)' }}>{t('profileEdit.subtitle') || 'Customize your identity across the network'}</p>
+        </div>
 
         {success && (
-          <div style={{ padding: '0.75rem 1rem', background: 'rgba(63,185,80,0.1)', border: '1px solid rgba(63,185,80,0.3)', borderRadius: 'var(--radius-md)', color: 'var(--accent-success)', fontSize: '0.875rem', marginBottom: 'var(--space-lg)' }}>
-            {success}
+          <div style={{ padding: '1rem', background: 'rgba(63,185,80,0.1)', borderLeft: '4px solid var(--accent-success)', borderRadius: '8px', color: 'var(--accent-success)', marginBottom: '30px', animation: 'slideIn 0.3s ease' }}>
+            <strong>✓</strong> {success}
           </div>
         )}
 
         {error && (
-          <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,81,73,0.1)', border: '1px solid rgba(248,81,73,0.3)', borderRadius: 'var(--radius-md)', color: 'var(--accent-danger)', fontSize: '0.875rem', marginBottom: 'var(--space-lg)' }}>
-            {error}
+          <div style={{ padding: '1rem', background: 'rgba(248,81,73,0.1)', borderLeft: '4px solid var(--accent-danger)', borderRadius: '8px', color: 'var(--accent-danger)', marginBottom: '30px', animation: 'slideIn 0.3s ease' }}>
+            <strong>⚠</strong> {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="card">
-          <div className="form-group">
-            <label className="form-label">{t('auth.username')}</label>
-            <input className="form-input" value={session?.user?.username || ''} disabled />
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+          
+          <div className="card" style={{ padding: '30px' }}>
+            <h3 style={{ marginBottom: '20px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>🖼️ {t('profileEdit.media_title') || 'Profile Appearance'}</h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '30px' }}>
+              <div style={{ textAlign: 'center' }}>
+                <label className="form-label">{t('profileEdit.avatar_label') || 'Profile Picture'}</label>
+                <div style={{ position: 'relative', width: '120px', height: '120px', margin: '15px auto', borderRadius: '50%', overflow: 'hidden', border: '3px solid var(--border-color)', background: 'var(--bg-elevated)' }}>
+                  {form.avatar ? (
+                    <img src={form.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)' }}>No Image</div>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={e => handleFileChange(e, 'avatar')} 
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }} 
+                  />
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Click to upload</p>
+              </div>
+
+              <div>
+                <label className="form-label">{t('profileEdit.banner_label') || 'Profile Banner'}</label>
+                <div style={{ position: 'relative', height: '120px', marginTop: '15px', borderRadius: '12px', overflow: 'hidden', border: '3px solid var(--border-color)', background: 'var(--bg-elevated)' }}>
+                  {form.banner ? (
+                    <img src={form.banner} alt="Banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)' }}>No Banner</div>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={e => handleFileChange(e, 'banner')} 
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }} 
+                  />
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '10px' }}>Recommended size: 1200x400</p>
+              </div>
+            </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+          <div className="card" style={{ padding: '30px' }}>
+            <h3 style={{ marginBottom: '20px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>📝 {t('profileEdit.info_title') || 'User Information'}</h3>
+            
             <div className="form-group">
-              <label className="form-label">{t('profileEdit.avatar') || 'Avatar'}</label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {form.avatar && <img src={form.avatar} alt="Preview" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--border-color)' }} />}
-                <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'avatar')} style={{ fontSize: '0.8rem' }} />
-              </div>
+              <label className="form-label">{t('profileEdit.bio_label') || 'Biography'}</label>
+              <textarea 
+                className="form-textarea" 
+                value={form.bio} 
+                onChange={e => setForm({ ...form, bio: e.target.value })} 
+                placeholder={t('profileEdit.bio_placeholder') || 'Tell the world about yourself...'}
+                rows={5} 
+                maxLength={500}
+                style={{ resize: 'none' }}
+              />
+              <p className="form-hint" style={{ textAlign: 'right' }}>{form.bio.length}/500</p>
             </div>
 
             <div className="form-group">
-              <label className="form-label">{t('profileEdit.banner') || 'Banner'}</label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {form.banner && <img src={form.banner} alt="Preview" style={{ width: '100%', height: '50px', borderRadius: '4px', objectFit: 'cover', border: '2px solid var(--border-color)' }} />}
-                <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'banner')} style={{ fontSize: '0.8rem' }} />
-              </div>
+              <label className="form-label">{t('auth.minecraft_name')}</label>
+              <input 
+                className="form-input" 
+                value={form.minecraftName} 
+                onChange={e => setForm({ ...form, minecraftName: e.target.value })} 
+                placeholder="Steve" 
+                maxLength={16} 
+              />
+              <p className="form-hint">{t('auth.minecraft_hint')}</p>
             </div>
           </div>
 
-          <div className="form-group">
-            <label className="form-label">{t('profileEdit.bio')}</label>
-            <textarea className="form-textarea" value={form.bio} onChange={e => setForm({ ...form, bio: e.target.value })} rows={4} maxLength={500} />
-            <p className="form-hint">{form.bio.length}/500</p>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">{t('auth.minecraft_name')}</label>
-            <input className="form-input" value={form.minecraftName} onChange={e => setForm({ ...form, minecraftName: e.target.value })} placeholder="Steve" maxLength={16} />
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="submit" className="btn btn-primary" disabled={loading} style={{ minWidth: '120px' }}>
-              {loading ? t('profileEdit.saving') : t('profileEdit.save')}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button type="button" onClick={() => router.back()} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+              ← {t('common.back') || 'Go Back'}
+            </button>
+            <button type="submit" className="btn btn-primary" disabled={loading} style={{ minWidth: '160px', padding: '15px 30px', fontSize: '1.1rem', borderRadius: '12px', boxShadow: '0 10px 20px -5px var(--accent-primary-glow)' }}>
+              {loading ? t('profileEdit.saving') : t('profileEdit.save_changes') || 'Save Changes'}
             </button>
           </div>
         </form>
