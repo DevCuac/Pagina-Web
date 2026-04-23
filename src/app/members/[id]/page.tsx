@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
-  const user = await prisma.user.findUnique({ where: { id }, select: { username: true } });
+  const user = await (prisma.user as any).findUnique({ where: { id }, select: { username: true } });
   if (!user) return { title: 'Usuario no encontrado' };
   return { title: user.username, description: `Perfil de ${user.username} en CrossPixel` };
 }
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function MemberProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const user = await prisma.user.findUnique({
+  const user = await (prisma.user as any).findUnique({
     where: { id },
     select: {
       id: true, username: true, bio: true, avatar: true, banner: true, createdAt: true,
@@ -117,7 +117,7 @@ export default async function MemberProfilePage({ params }: { params: Promise<{ 
             </h3>
             
             {user.forumPosts.length > 0 ? (
-              user.forumPosts.map((post) => (
+              user.forumPosts.map((post: any) => (
                 <Link 
                   key={post.id} 
                   href={`/forums/${post.forum.slug}/${post.id}`}

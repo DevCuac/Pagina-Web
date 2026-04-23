@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { getLocaleObj, getTranslation } from '@/lib/i18n';
@@ -9,7 +10,7 @@ export default async function DashboardPage() {
   if (!session) redirect('/login');
 
   const [dbUser, postCount, ticketCount, unreadNotifs] = await Promise.all([
-    prisma.user.findUnique({ 
+    (prisma.user as any).findUnique({ 
       where: { id: session.user.id }, 
       select: { 
         bio: true, banner: true, avatar: true, 

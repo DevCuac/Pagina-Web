@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
-  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { bio: true, minecraftName: true, minecraftUuid: true, avatar: true, banner: true, instagram: true, twitter: true, discord: true, youtube: true, facebook: true } });
+  const user = await (prisma.user as any).findUnique({ where: { id: session.user.id }, select: { bio: true, minecraftName: true, minecraftUuid: true, avatar: true, banner: true, instagram: true, twitter: true, discord: true, youtube: true, facebook: true } });
   return NextResponse.json(user);
 }
 
