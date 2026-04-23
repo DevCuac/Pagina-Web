@@ -14,8 +14,6 @@
     "unverified_warning": "⚠️ Dein Konto ist nicht verifiziert. Bitte prüf deinen Posteingang oder Spam-Ordner."
   },
   "auth": {
-    "loading": "Anmelden...",
-    "or_continue_with": "oder fahre fort mit",
     "login_title": "Willkommen zurück",
     "login_desc": "Melde dich an, um fortzufahren",
     "register_title": "Konto erstellen",
@@ -53,7 +51,10 @@
     "minecraft_label": "Minecraft-Name (Optional)",
     "register_free": "Kostenlos registrieren",
     "no_account": "Noch kein Konto?",
-    "login_now": "Anmelden"
+    "login_now": "Anmelden",
+    "ultimate_network_title": "DAS ULTIMATIVE<br/>NETZWERK",
+    "ultimate_network_desc": "Schließe dich tausenden Spielern in unserem einzigartigen Minecraft-Universum an. Eigene Spiele, kompetitive Rankings und eine fantastische Community erwarten dich.",
+    "ultimate_network_cta": "BEGINNE DEINE REISE HEUTE"
   },
   "dashboard": {
     "greeting": "Hallo, willkommen zurück!",

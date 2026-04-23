@@ -9,6 +9,7 @@ import prisma from './db';
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma) as any,
   session: { strategy: 'jwt' },
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/login',
     error: '/login',
@@ -23,42 +24,48 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) {
-            console.log('AUTH_DEBUG: Missing credentials');
+            console.error('AUTH_DEBUG: Missing email or password');
             return null;
           }
 
-          const user = await (prisma.user as any).findUnique({
-            where: { email: credentials.email as string },
+          // Use findFirst to avoid potential issues with findUnique if there are glitches
+          const user = await (prisma.user as any).findFirst({
+            where: { 
+              email: {
+                equals: credentials.email as string,
+              }
+            },
             include: { role: true },
           });
 
           if (!user) {
-            console.log('AUTH_DEBUG: User not found:', credentials.email);
+            console.error('AUTH_DEBUG: User not found in DB:', credentials.email);
             return null;
           }
           
           if (!user.passwordHash) {
-            console.log('AUTH_DEBUG: User has no passwordHash (OAuth user?):', credentials.email);
+            console.error('AUTH_DEBUG: User found but has no passwordHash (likely OAuth-only user):', credentials.email);
             return null;
           }
 
           const isValid = compareSync(credentials.password as string, user.passwordHash);
           if (!isValid) {
-            console.log('AUTH_DEBUG: Invalid password for:', credentials.email);
+            console.error('AUTH_DEBUG: Invalid password for:', credentials.email);
             return null;
           }
 
-          console.log('AUTH_DEBUG: Login successful for:', user.username, 'Role:', user.role?.name);
-          // Allow login even if unverified, we will restrict actions later
+          console.log('AUTH_DEBUG: Successful authorization for:', user.username);
+          
           return {
             id: user.id,
             name: user.username,
             email: user.email,
             image: user.avatar,
-          } as any;
-        } catch (error) {
-          console.error('AUTH_DEBUG_ERROR:', error);
-          return null;
+          };
+        } catch (error: any) {
+          console.error('AUTH_DEBUG_CRITICAL_ERROR:', error.message);
+          console.error(error.stack);
+          throw new Error('AUTH_INTERNAL_ERROR');
         }
       },
     }),
@@ -83,73 +90,81 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user, trigger }) {
-      // Execute the database lookup on initial login OR when triggering manual session update
-      if (user || trigger === 'update') {
-        const fetchEmail = user?.email || token.email; // Fallback to token email if updating
-        if (fetchEmail) {
-          const dbUser = await (prisma.user as any).findUnique({
-            where: { email: fetchEmail },
-            include: { role: true },
-          });
-          if (dbUser) {
-            token.userId = dbUser.id;
-            token.username = dbUser.username;
-            token.role = dbUser.role.name;
-            token.roleColor = dbUser.role.color;
-            token.isAdmin = dbUser.role.isAdmin;
-            token.isStaff = dbUser.role.isStaff;
-            token.avatar = dbUser.avatar;
-            token.banner = dbUser.banner;
-            token.emailVerified = dbUser.emailVerified;
-            token.rolePermissions = dbUser.role.permissions;
+      try {
+        if (user || trigger === 'update') {
+          const fetchEmail = user?.email || token.email;
+          if (fetchEmail) {
+            const dbUser = await (prisma.user as any).findUnique({
+              where: { email: fetchEmail },
+              include: { role: true },
+            });
+            if (dbUser) {
+              token.userId = dbUser.id;
+              token.username = dbUser.username;
+              token.role = dbUser.role?.name || 'User';
+              token.roleColor = dbUser.role?.color || '#8b949e';
+              token.isAdmin = dbUser.role?.isAdmin || false;
+              token.isStaff = dbUser.role?.isStaff || false;
+              token.avatar = dbUser.avatar;
+              token.banner = dbUser.banner;
+              token.emailVerified = dbUser.emailVerified;
+              token.rolePermissions = dbUser.role?.permissions || '{}';
+            }
           }
         }
+      } catch (error) {
+        console.error('AUTH_JWT_CALLBACK_ERROR:', error);
       }
       return token;
     },
     async session({ session, token }) {
-      if (token) {
+      if (token && session.user) {
         session.user.id = token.userId as string;
         session.user.username = token.username as string;
         session.user.role = token.role as string;
         session.user.roleColor = token.roleColor as string;
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.isStaff = token.isStaff as boolean;
-        // Don't store large base64 strings in the session cookie to avoid size limits
         session.user.avatar = null; 
         session.user.banner = null;
-        session.user.emailVerified = token.emailVerified as Date | null;
+        session.user.emailVerified = token.emailVerified as any;
         session.user.rolePermissions = token.rolePermissions as string;
       }
       return session;
     },
     async signIn({ user, account }) {
-      if (account?.provider === 'credentials') return true;
-      
-      // For OAuth providers, check if user exists; if not, create with default role
-      if (user.email) {
-        const existingUser = await prisma.user.findUnique({
-          where: { email: user.email },
-        });
+      try {
+        if (account?.provider === 'credentials') return true;
         
-        if (!existingUser) {
-          const defaultRole = await prisma.role.findFirst({ where: { isDefault: true } });
-          if (!defaultRole) return false;
-          
-          await prisma.user.create({
-            data: {
-              username: user.name || user.email.split('@')[0],
-              email: user.email,
-              avatar: user.image,
-              roleId: defaultRole.id,
-              ...(account?.provider === 'discord' ? { discordId: account.providerAccountId } : {}),
-              ...(account?.provider === 'google' ? { googleId: account.providerAccountId } : {}),
-            },
+        if (user.email) {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email },
           });
+          
+          if (!existingUser) {
+            const defaultRole = await prisma.role.findFirst({ where: { isDefault: true } });
+            if (!defaultRole) {
+              console.error('AUTH_SIGNIN_ERROR: No default role found for new OAuth user');
+              return false;
+            }
+            
+            await prisma.user.create({
+              data: {
+                username: user.name || user.email.split('@')[0],
+                email: user.email,
+                avatar: user.image,
+                roleId: defaultRole.id,
+                ...(account?.provider === 'discord' ? { discordId: account.providerAccountId } : {}),
+                ...(account?.provider === 'google' ? { googleId: account.providerAccountId } : {}),
+              },
+            });
+          }
         }
+        return true;
+      } catch (error) {
+        console.error('AUTH_SIGNIN_CALLBACK_ERROR:', error);
+        return false;
       }
-      
-      return true;
     },
   },
 });

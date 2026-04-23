@@ -1,14 +1,20 @@
 import { LoginForm } from "@/components/login-form"
 import Link from "next/link"
 import prisma from "@/lib/db"
-import { Languages } from "lucide-react"
+import { getLocaleObj, getTranslation } from "@/lib/i18n"
 
 export default async function LoginPage() {
+  const { dict } = await getLocaleObj();
+  
   const bgSetting = await (prisma.siteSetting as any).findUnique({
     where: { key: 'auth_background_url' }
   });
   
   const bgUrl = bgSetting?.value || "/login_bg_cross_pixel_1776919751758.png";
+
+  const title = getTranslation(dict, 'auth.ultimate_network_title');
+  const desc = getTranslation(dict, 'auth.ultimate_network_desc');
+  const cta = getTranslation(dict, 'auth.ultimate_network_cta');
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2 bg-[#050505] font-sans selection:bg-electric/30">
@@ -20,11 +26,6 @@ export default async function LoginPage() {
             </div>
             <span className="text-xl uppercase">Cross-Pixel</span>
           </Link>
-          
-          {/* Note: The main Navbar handles the language switcher globally, 
-              but we could add a minimal one here if the Navbar is hidden.
-              Assuming Navbar is visible, we don't need to duplicate it.
-          */}
         </div>
         
         <div className="flex flex-1 items-center justify-center py-12">
@@ -43,15 +44,16 @@ export default async function LoginPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-transparent" />
         <div className="absolute bottom-20 left-12 right-12 z-20">
           <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-right-8 duration-1000 delay-300">
-            <h2 className="text-4xl font-display font-black text-white uppercase tracking-tighter leading-none">
-              The Ultimate<br/>Network
-            </h2>
+            <h2 
+              className="text-4xl font-display font-black text-white uppercase tracking-tighter leading-none"
+              dangerouslySetInnerHTML={{ __html: title }}
+            />
             <div className="flex flex-col gap-3">
               <p className="text-sm text-zinc-300 font-medium leading-relaxed max-w-sm">
-                Join thousands of players in our unique Minecraft universe. Custom games, competitive rankings, and an amazing community await you.
+                {desc}
               </p>
               <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">
-                Start your journey today
+                {cta}
               </p>
             </div>
           </div>

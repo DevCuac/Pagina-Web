@@ -14,8 +14,6 @@
     "unverified_warning": "⚠️ Tu cuenta no está verificada. Por favor, revisa tu bandeja de entrada o spam."
   },
   "auth": {
-    "loading": "Cargando...",
-    "or_continue_with": "o continuar con",
     "login_title": "Bienvenido de nuevo",
     "login_desc": "Inicia sesión para continuar",
     "register_title": "Crear Cuenta",
@@ -47,7 +45,10 @@
     "username_label": "Nombre de Usuario",
     "minecraft_label": "Nombre de Minecraft (Opcional)",
     "register_free": "Regístrate gratis",
-    "login_now": "Inicia sesión"
+    "login_now": "Inicia sesión",
+    "ultimate_network_title": "LA RED<br/>DEFINITIVA",
+    "ultimate_network_desc": "Únete a miles de jugadores en nuestro universo único de Minecraft. Juegos personalizados, rankings competitivos y una comunidad increíble te esperan.",
+    "ultimate_network_cta": "EMPIEZA TU VIAJE HOY"
   },
   "dashboard": {
     "greeting": "¡Hola, bienvenido de nuevo!",
