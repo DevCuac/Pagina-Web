@@ -28,7 +28,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
-          // Use findFirst to avoid potential issues with findUnique if there are glitches
           const user = await (prisma.user as any).findFirst({
             where: { 
               email: {
@@ -56,16 +55,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           console.log('AUTH_DEBUG: Successful authorization for:', user.username);
           
+          // Return the full user object to satisfy the User interface in next-auth.d.ts
           return {
             id: user.id,
-            name: user.username,
             email: user.email,
-            image: user.avatar,
-          };
+            username: user.username,
+            role: user.role?.name || 'User',
+            roleColor: user.role?.color || '#8b949e',
+            isAdmin: user.role?.isAdmin || false,
+            isStaff: user.role?.isStaff || false,
+            avatar: user.avatar,
+            banner: user.banner,
+            emailVerified: user.emailVerified,
+            rolePermissions: user.role?.permissions || '{}',
+          } as any;
         } catch (error: any) {
           console.error('AUTH_DEBUG_CRITICAL_ERROR:', error.message);
-          console.error(error.stack);
-          throw new Error('AUTH_INTERNAL_ERROR');
+          return null;
         }
       },
     }),
@@ -91,25 +97,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user, trigger }) {
       try {
-        if (user || trigger === 'update') {
-          const fetchEmail = user?.email || token.email;
-          if (fetchEmail) {
-            const dbUser = await (prisma.user as any).findUnique({
-              where: { email: fetchEmail },
-              include: { role: true },
-            });
-            if (dbUser) {
-              token.userId = dbUser.id;
-              token.username = dbUser.username;
-              token.role = dbUser.role?.name || 'User';
-              token.roleColor = dbUser.role?.color || '#8b949e';
-              token.isAdmin = dbUser.role?.isAdmin || false;
-              token.isStaff = dbUser.role?.isStaff || false;
-              token.avatar = dbUser.avatar;
-              token.banner = dbUser.banner;
-              token.emailVerified = dbUser.emailVerified;
-              token.rolePermissions = dbUser.role?.permissions || '{}';
-            }
+        // Initial login
+        if (user) {
+          token.userId = user.id;
+          token.username = (user as any).username;
+          token.role = (user as any).role;
+          token.roleColor = (user as any).roleColor;
+          token.isAdmin = (user as any).isAdmin;
+          token.isStaff = (user as any).isStaff;
+          token.avatar = (user as any).avatar;
+          token.banner = (user as any).banner;
+          token.emailVerified = (user as any).emailVerified;
+          token.rolePermissions = (user as any).rolePermissions;
+        } 
+        // Force update or refresh
+        else if (trigger === 'update' && token.email) {
+          const dbUser = await (prisma.user as any).findUnique({
+            where: { email: token.email },
+            include: { role: true },
+          });
+          if (dbUser) {
+            token.userId = dbUser.id;
+            token.username = dbUser.username;
+            token.role = dbUser.role?.name || 'User';
+            token.roleColor = dbUser.role?.color || '#8b949e';
+            token.isAdmin = dbUser.role?.isAdmin || false;
+            token.isStaff = dbUser.role?.isStaff || false;
+            token.avatar = dbUser.avatar;
+            token.banner = dbUser.banner;
+            token.emailVerified = dbUser.emailVerified;
+            token.rolePermissions = dbUser.role?.permissions || '{}';
           }
         }
       } catch (error) {
@@ -125,7 +142,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.roleColor = token.roleColor as string;
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.isStaff = token.isStaff as boolean;
-        session.user.avatar = null; 
+        session.user.avatar = null; // Still null to keep session small
         session.user.banner = null;
         session.user.emailVerified = token.emailVerified as any;
         session.user.rolePermissions = token.rolePermissions as string;
