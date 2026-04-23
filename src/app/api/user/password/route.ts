@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'New password must be at least 8 characters' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({ 
+    const user = await (prisma.user as any).findUnique({ 
       where: { id: session.user.id },
       select: { id: true, password: true }
     });
