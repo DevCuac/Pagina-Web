@@ -21,32 +21,37 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        try {
+          if (!credentials?.email || !credentials?.password) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string },
-          include: { role: true },
-        });
+          const user = await (prisma.user as any).findUnique({
+            where: { email: credentials.email as string },
+            include: { role: true },
+          });
 
-        if (!user || !user.passwordHash) return null;
+          if (!user || !user.passwordHash) return null;
 
-        const isValid = compareSync(credentials.password as string, user.passwordHash);
-        if (!isValid) return null;
+          const isValid = compareSync(credentials.password as string, user.passwordHash);
+          if (!isValid) return null;
 
-        // Block login if unverified and internal verification is enforced (Exempt Admins)
-        if (!user.emailVerified && !user.role.isAdmin) {
-          const isVerificationRequired = process.env.EMAIL_VERIFICATION_REQUIRED === 'true';
-          if (isVerificationRequired) {
-             throw new Error('UnverifiedEmail');
+          // Block login if unverified and internal verification is enforced (Exempt Admins)
+          if (!user.emailVerified && !user.role.isAdmin) {
+            const isVerificationRequired = process.env.EMAIL_VERIFICATION_REQUIRED === 'true';
+            if (isVerificationRequired) {
+               throw new Error('UnverifiedEmail');
+            }
           }
-        }
 
-        return {
-          id: user.id,
-          name: user.username,
-          email: user.email,
-          image: user.avatar,
-        } as any;
+          return {
+            id: user.id,
+            name: user.username,
+            email: user.email,
+            image: user.avatar,
+          } as any;
+        } catch (error) {
+          console.error('AUTH_DEBUG_ERROR:', error);
+          return null;
+        }
       },
     }),
     ...(process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET
@@ -74,7 +79,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user || trigger === 'update') {
         const fetchEmail = user?.email || token.email; // Fallback to token email if updating
         if (fetchEmail) {
-          const dbUser = await prisma.user.findUnique({
+          const dbUser = await (prisma.user as any).findUnique({
             where: { email: fetchEmail },
             include: { role: true },
           });
