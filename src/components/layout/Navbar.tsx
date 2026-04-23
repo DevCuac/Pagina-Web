@@ -111,30 +111,34 @@ export default function Navbar() {
 
         <div className={styles.actions}>
           {/* Language Switcher */}
-          <div className="relative">
+          <div className="relative group/lang">
             <button 
               onClick={() => setLangMenuOpen(!langMenuOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800/50 text-zinc-400 hover:text-white transition-all shadow-xl"
+              className={cn(styles.userBtn, "size-10 !p-0 justify-center !rounded-xl !bg-zinc-900 border-zinc-800 hover:border-zinc-700")}
+              title="Change Language"
             >
-              <Languages className="size-4 opacity-70" />
-              <span className="text-[11px] font-black tracking-widest uppercase">{locale}</span>
-              <ChevronDown className={cn("size-3 transition-transform duration-300 opacity-50", langMenuOpen && "rotate-180")} />
+              <Languages className="size-5 text-zinc-400 group-hover/lang:text-white transition-colors" />
             </button>
             
             {langMenuOpen && (
               <>
                 <div className="fixed inset-0 z-[90]" onClick={() => setLangMenuOpen(false)} />
-                <div className="absolute top-full right-0 mt-2 w-48 p-2 bg-zinc-950 border border-zinc-800 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-[100] animate-in fade-in zoom-in duration-200">
-                  <div className="text-[9px] font-black text-zinc-600 uppercase tracking-widest px-3 py-2 mb-1">Select Language</div>
-                  <button onClick={() => changeLocale('es')} className={cn("flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all", locale === 'es' ? "bg-electric text-white shadow-lg shadow-electric/20" : "text-zinc-500 hover:bg-zinc-900 hover:text-white")}>
-                    <span className="text-sm">🇪🇸</span> Español
-                  </button>
-                  <button onClick={() => changeLocale('en')} className={cn("flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all", locale === 'en' ? "bg-electric text-white shadow-lg shadow-electric/20" : "text-zinc-500 hover:bg-zinc-900 hover:text-white")}>
-                    <span className="text-sm">🇬🇧</span> English
-                  </button>
-                  <button onClick={() => changeLocale('de')} className={cn("flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all", locale === 'de' ? "bg-electric text-white shadow-lg shadow-electric/20" : "text-zinc-500 hover:bg-zinc-900 hover:text-white")}>
-                    <span className="text-sm">🇩🇪</span> Deutsch
-                  </button>
+                <div className={cn(styles.dropdown, "!min-w-[180px] !p-2 !rounded-2xl !bg-zinc-950 border-zinc-800 shadow-[0_20px_50px_rgba(0,0,0,0.9)]")}>
+                  <div className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] px-3 py-2 border-b border-zinc-900 mb-2">Select Language</div>
+                  <div className="flex flex-col gap-1">
+                    <button onClick={() => changeLocale('es')} className={cn("flex items-center w-full gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all", locale === 'es' ? "bg-electric text-white shadow-xl shadow-electric/20" : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-200")}>
+                      <span className="text-base grayscale-0">🇪🇸</span> 
+                      <span className="flex-1 text-left">Español</span>
+                    </button>
+                    <button onClick={() => changeLocale('en')} className={cn("flex items-center w-full gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all", locale === 'en' ? "bg-electric text-white shadow-xl shadow-electric/20" : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-200")}>
+                      <span className="text-base grayscale-0">🇬🇧</span> 
+                      <span className="flex-1 text-left">English</span>
+                    </button>
+                    <button onClick={() => changeLocale('de')} className={cn("flex items-center w-full gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all", locale === 'de' ? "bg-electric text-white shadow-xl shadow-electric/20" : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-200")}>
+                      <span className="text-base grayscale-0">🇩🇪</span> 
+                      <span className="flex-1 text-left">Deutsch</span>
+                    </button>
+                  </div>
                 </div>
               </>
             )}

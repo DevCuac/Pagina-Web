@@ -41,7 +41,17 @@
     "unknown_user": "Unknown User",
     "forgot_password": "Forgot your password?",
     "already_account": "Already have an account?",
-    "or_continue_with": "or continue with"
+    "login_title_premium": "Welcome back to CrossPixel!",
+    "login_desc_premium": "Log in to continue",
+    "register_title_premium": "Create your CrossPixel account",
+    "register_desc_premium": "Join our community",
+    "email_label": "Email Address",
+    "password_label": "Password",
+    "username_label": "Username",
+    "minecraft_label": "Minecraft Name (Optional)",
+    "register_free": "Register for free",
+    "no_account": "Don't have an account?",
+    "login_now": "Log in"
   },
   "dashboard": {
     "greeting": "Hello, welcome back!",

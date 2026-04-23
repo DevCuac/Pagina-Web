@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FieldGroup } from "@/components/ui/field"
 import Link from 'next/link'
+import { Eye, EyeOff } from 'lucide-react'
 
 export function LoginForm({
   className,
@@ -17,6 +18,7 @@ export function LoginForm({
   const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -42,11 +44,11 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-8", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl md:text-3xl font-display font-black tracking-tighter text-white uppercase leading-tight">
-          {t('auth.login_title_premium') || '¡BIENVENIDO DE NUEVO A CROSSPIXEL!'}
+        <h1 className="text-2xl md:text-4xl font-display font-black tracking-tighter text-white uppercase leading-tight drop-shadow-2xl">
+          {t('auth.login_title_premium')}
         </h1>
-        <p className="text-[10px] md:text-xs text-zinc-500 font-bold uppercase tracking-[0.2em]">
-          {t('auth.login_desc_premium') || 'INICIA SESIÓN PARA CONTINUAR'}
+        <p className="text-[10px] md:text-xs text-zinc-500 font-bold uppercase tracking-[0.3em]">
+          {t('auth.login_desc_premium')}
         </p>
       </div>
 
@@ -54,7 +56,7 @@ export function LoginForm({
         <FieldGroup>
           <div className="grid gap-2">
             <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-              {t('auth.email_label') || 'CORREO ELECTRÓNICO'}
+              {t('auth.email_label')}
             </Label>
             <Input
               id="email"
@@ -63,54 +65,63 @@ export function LoginForm({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-zinc-950 border-zinc-800/50 h-12 rounded-xl focus:ring-electric/20 focus:border-electric transition-all"
+              className="bg-zinc-950 border-zinc-800/50 h-14 px-4 rounded-2xl focus:ring-electric/20 focus:border-electric transition-all text-sm flex items-center"
             />
           </div>
 
           <div className="grid gap-2">
             <div className="flex items-center justify-between px-1">
               <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
-                {t('auth.password_label') || 'CONTRASEÑA'}
+                {t('auth.password_label')}
               </Label>
               <Link
                 href="/forgot-password"
                 className="text-[10px] font-black uppercase tracking-widest text-electric hover:underline"
               >
-                {t('auth.forgot_password') || '¡He olvidado mi contraseña!'}
+                {t('auth.forgot_password')}
               </Link>
             </div>
-            <Input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-zinc-950 border-zinc-800/50 h-12 rounded-xl focus:ring-electric/20 focus:border-electric transition-all"
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-zinc-950 border-zinc-800/50 h-14 px-4 pr-12 rounded-2xl focus:ring-electric/20 focus:border-electric transition-all text-sm flex items-center"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-300 transition-colors"
+              >
+                {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+              </button>
+            </div>
           </div>
 
           {error && (
-            <p className="text-xs font-bold text-red-500 bg-red-500/10 border border-red-500/20 p-3 rounded-lg animate-shake">
+            <p className="text-xs font-bold text-red-500 bg-red-500/10 border border-red-500/20 p-4 rounded-2xl animate-shake">
               {error === 'CredentialsSignin' ? t('auth.err_credentials') : t('auth.err_generic')}
             </p>
           )}
 
           <Button 
             type="submit" 
-            className="w-full h-12 rounded-xl bg-electric hover:bg-electric/90 text-white font-black uppercase tracking-widest btn-glow transition-all disabled:opacity-50"
+            className="w-full h-14 rounded-2xl bg-electric hover:bg-electric/90 text-white font-black uppercase tracking-widest btn-glow transition-all disabled:opacity-50 mt-2 shadow-xl shadow-electric/20"
             disabled={loading}
           >
-            {loading ? t('auth.loading') : (t('auth.login_btn') || 'INICIAR SESIÓN')}
+            {loading ? t('auth.loading') : t('auth.login_btn')}
           </Button>
         </FieldGroup>
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-zinc-800/50" />
+            <span className="w-full border-t border-zinc-800/30" />
           </div>
-          <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.2em]">
+          <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.3em]">
             <span className="bg-zinc-950 px-4 text-zinc-600">
-              {t('auth.or_continue_with') || 'O CONTINÚA CON'}
+              {t('auth.or_continue_with')}
             </span>
           </div>
         </div>
@@ -120,7 +131,7 @@ export function LoginForm({
             variant="outline" 
             type="button"
             onClick={() => signIn('discord')}
-            className="h-12 rounded-xl bg-zinc-950 border-zinc-800/50 hover:bg-zinc-900 transition-all font-bold text-xs gap-2"
+            className="h-14 rounded-2xl bg-zinc-950 border-zinc-800/50 hover:bg-zinc-900 transition-all font-bold text-xs gap-3 shadow-lg"
           >
             <svg className="size-5 fill-white" viewBox="0 0 24 24">
               <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01a10.147 10.147 0 0 0 .372.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.086 2.157 2.419c0 1.334-.947 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.086 2.157 2.419c0 1.334-.946 2.419-2.157 2.419z"/>
@@ -131,7 +142,7 @@ export function LoginForm({
             variant="outline" 
             type="button"
             onClick={() => signIn('google')}
-            className="h-12 rounded-xl bg-zinc-950 border-zinc-800/50 hover:bg-zinc-900 transition-all font-bold text-xs gap-2"
+            className="h-14 rounded-2xl bg-zinc-950 border-zinc-800/50 hover:bg-zinc-900 transition-all font-bold text-xs gap-3 shadow-lg"
           >
             <svg className="size-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -143,10 +154,10 @@ export function LoginForm({
           </Button>
         </div>
 
-        <div className="text-center text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-widest">
-          {t('auth.no_account') || '¡No tienes cuenta?'} {" "}
-          <Link href="/register" className="text-electric hover:underline">
-            {t('auth.register_free') || 'Regístrate gratis'}
+        <div className="text-center text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-widest mt-2">
+          {t('auth.no_account')} {" "}
+          <Link href="/register" className="text-electric hover:underline font-black">
+            {t('auth.register_free')}
           </Link>
         </div>
       </form>

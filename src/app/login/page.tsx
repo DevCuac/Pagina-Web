@@ -41,10 +41,19 @@ export default async function LoginPage() {
           className="absolute inset-0 h-full w-full object-cover opacity-40 grayscale hover:grayscale-0 transition-all duration-1000"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-transparent" />
-        <div className="absolute bottom-12 left-12 right-12 z-20">
-          <div className="p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl animate-in fade-in slide-in-from-right-8 duration-1000 delay-300">
-            <h2 className="text-2xl font-display font-black text-white uppercase tracking-tighter mb-2">The Ultimate Network</h2>
-            <p className="text-sm text-zinc-400 font-medium leading-relaxed">Join thousands of players in our unique Minecraft universe. Custom games, competitive rankings, and an amazing community await you.</p>
+        <div className="absolute bottom-20 left-12 right-12 z-20">
+          <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-right-8 duration-1000 delay-300">
+            <h2 className="text-4xl font-display font-black text-white uppercase tracking-tighter leading-none">
+              The Ultimate<br/>Network
+            </h2>
+            <div className="flex flex-col gap-3">
+              <p className="text-sm text-zinc-300 font-medium leading-relaxed max-w-sm">
+                Join thousands of players in our unique Minecraft universe. Custom games, competitive rankings, and an amazing community await you.
+              </p>
+              <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">
+                Start your journey today
+              </p>
+            </div>
           </div>
         </div>
       </div>
